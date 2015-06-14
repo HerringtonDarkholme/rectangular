@@ -37,9 +37,5 @@ export class Prop<V> extends Observable<V> {
 	}
 }
 
-export function p(name: string[]) {
-	var prop = new Prop(name[0])
-	return prop.toString()
-}
 
 export const verifier = new PropertyVerifier()
