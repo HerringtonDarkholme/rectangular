@@ -14,13 +14,13 @@ class MyComponent extends Component {
 				div({class: 'heheh'}, inp['value']),
 				inp,
 				div({class: 'btn',click() {inp['value'].value = 123}}, 'change')
-			).render()
+			)
 		)
 	}
 }
 
-function mount(a) {
-	document.body.appendChild(a.render())
+function mount(elem: Tag<HTMLElement>) {
+	  document.body.appendChild(elem._render())
 }
 
 var btnText

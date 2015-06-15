@@ -7,7 +7,7 @@ class Div extends Tag<HTMLDivElement> {
 		super(props)
 		this.children = children
 	}
-	render() {
+	_render() {
 		var elem = document.createElement('div')
 		let obj = this.props
 		for (let key in obj) {

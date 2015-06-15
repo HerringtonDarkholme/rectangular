@@ -1,7 +1,7 @@
 import Observable from '../observable'
 import {Prop, verifier} from '../prop'
 
-export type ChildTag = string | Prop<string> | NodeRep<any>
+export type ChildTag = string | Prop<string> | NodeRep<Node>
 
 export default class NodeRep<T extends Node> extends Observable<any> {
 	protected _linkedProperties: {[a:string]: Prop<{}>} = {}
@@ -16,13 +16,13 @@ export default class NodeRep<T extends Node> extends Observable<any> {
 			}
 		}
 	}
-	render(): T {
+	_render(): T {
     throw new Error('Not Implemented')
 	}
 }
 
 export class TextRep extends NodeRep<Text> {
-  render(): Text {
+  _render(): Text {
 		var node = document.createTextNode(this.value)
 		this.onChange(function(_, newVal) {
 			node.textContent = newVal

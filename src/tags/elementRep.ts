@@ -1,6 +1,7 @@
 import NodeRep from './nodeRep'
 import {Prop} from '../prop'
 import Observable from '../observable'
+import {ChildTag} from './nodeRep'
 
 class ElementRep<T extends Element> extends NodeRep<T> {
 	polymorphicBind(elem: T, key: string, value: string): void
@@ -37,16 +38,17 @@ class ElementRep<T extends Element> extends NodeRep<T> {
 export class VoidElement<T extends HTMLElement> extends ElementRep<T> {}
 
 export class Tag<T extends HTMLElement> extends ElementRep<T> {
-	append(elem, child) {
+  _render(): T { throw new Error('not implemented') }
+	append(elem, child: ChildTag) {
 		if (typeof child === 'string') {
 			elem.appendChild(document.createTextNode(child))
 			return
 		}
-		if (child instanceof Tag) {
-			elem.appendChild(child.render())
+		if (child instanceof NodeRep) {
+			elem.appendChild(child._render())
 			return
 		}
-		if (child instanceof Observable) {
+		if (child instanceof Prop) {
 			let node = document.createTextNode(child.value)
 			elem.appendChild(node)
 			child.onChange(function(_, newVal) {
