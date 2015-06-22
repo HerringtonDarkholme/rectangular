@@ -10,12 +10,12 @@ class Input extends VoidElement<HTMLInputElement> {
     let obj = this.props
     for (let key in obj) {
       this.polymorphicBind(elem, key, obj[key])
-      if (key.indexOf('value') === 0 && key in this._linkedProperties) {
+      if (key.indexOf('value') === 0 && key in this._linkedDirectives) {
         (function(obs) {
           elem.addEventListener('keyup', function() {
             obs.value = elem.value
           })
-        })(this._linkedProperties[key])
+        })(this._linkedDirectives[key])
       }
     }
     return elem

@@ -1,19 +1,20 @@
 import Observable from '../observable'
-import {Prop, verifier} from '../prop'
+import verifier from '../directives/verifier'
+import Directive from '../directives/directive'
 
-export type ChildTag = string | Prop<string> | NodeRep<Node>
+export type ChildTag = string | Directive<string> | NodeRep<Node>
 
 export default class NodeRep<T extends Node> extends Observable<any> {
-	protected _linkedProperties: {[a:string]: Prop<{}>} = {}
+	protected _linkedDirectives: {[a:string]: Directive<{}>} = {}
 	constructor(props: any = {}) {
 		super()
+    // link directives
 		for (let key in props) {
-			let obs
-			if (obs = verifier.pop(key))	{
-        obs.value = props[key]
-				this._linkedProperties[key] = obs
-				this[obs.name] = obs
-			}
+			let obs = verifier.pop(key)
+			if (!obs) continue
+      obs.value = props[key]
+      this._linkedDirectives[key] = obs
+      this[obs.name] = obs
 		}
 	}
 	_render(): T {

@@ -1,6 +1,6 @@
 import {Tag} from './tags/elementRep'
 import {TextRep} from './tags/nodeRep'
-import {Prop} from './prop'
+import {Prop} from './directives/prop'
 
 export * from './tags/div'
 export * from './tags/input'

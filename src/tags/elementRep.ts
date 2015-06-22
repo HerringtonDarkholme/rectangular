@@ -1,31 +1,27 @@
 import NodeRep from './nodeRep'
-import {Prop} from '../prop'
+import Directive from '../directives/directive'
+import {Prop} from '../directives/prop'
 import Observable from '../observable'
 import {ChildTag} from './nodeRep'
 
-class ElementRep<T extends Element> extends NodeRep<T> {
+export class ElementRep<T extends Element> extends NodeRep<T> {
 	polymorphicBind(elem: T, key: string, value: string): void
 	polymorphicBind(elem: T, key: string, value: Function): void
-	polymorphicBind(elem: T, key: string, value: Prop<{}>): void
+	polymorphicBind(elem: T, key: string, value: Directive<{}>): void
 	polymorphicBind(elem: T, key: string, value: any) {
-		if (key in this._linkedProperties) {
-			let observable = this._linkedProperties[key]
-			key = observable.name
-			observable.onChange(function(oldValue, newValue) {
-				elem[key] = newValue
-			})
-			elem[key] = value
-			return
+    if (key in this._linkedDirectives) {
+      let directive = this._linkedDirectives[key]
+      directive.bind(this, value)
 		}
-		if (key.indexOf('bind') === 0 && value instanceof Prop) {
-			let realKey = key.substr(4)
-			value.onChange(function(oldVal, newVal) {
-				elem[realKey]	= newVal
-			})
-			this[realKey] = value
-			elem[realKey] = value.value
-			return
-		}
+		// if (key.indexOf('bind') === 0 && value instanceof Prop) {
+		// 	let realKey = key.substr(4)
+		// 	value.onChange(function(oldVal, newVal) {
+		// 		elem[realKey]	= newVal
+		// 	})
+		// 	this[realKey] = value
+		// 	elem[realKey] = value.value
+		// 	return
+		// }
 		if (typeof value === 'string') {
 			elem.setAttribute(key, value)
 		}
