@@ -3,6 +3,7 @@ import Directive from '../directives/directive'
 import {Prop} from '../directives/prop'
 import Observable from '../observable'
 import {ChildTag} from './nodeRep'
+import {write} from '../render'
 
 export class ElementRep<T extends Element> extends NodeRep<T> {
 	polymorphicBind(elem: T, key: string, value: string): void
@@ -48,7 +49,7 @@ export class Tag<T extends HTMLElement> extends ElementRep<T> {
 			let node = document.createTextNode(child.value)
 			elem.appendChild(node)
 			child.onChange(function(_, newVal) {
-				node.textContent = newVal
+				write(() => node.textContent = newVal)
 			})
 			return
 		}
