@@ -1,4 +1,5 @@
 /// <reference path='../typings/window.d.ts' />
+/// <reference path='../typings/promise.d.ts' />
 
 // Normalize rAF
 var raf = window.requestAnimationFrame
@@ -67,3 +68,64 @@ export function write(fn: Function, ctx?: any): number {
   if (mode === DomOperatioType.PENDING) scheduleDomOperation()
   return operation.id
 }
+
+// sadly, TypeScript does not capture `throw` type
+class FastDomPromise<Ret> {
+	constructor(private promise: Promise<Ret>) {}
+	then<R>(
+		onFulfill: (r: Ret) => R | Promise<R>,
+		onReject?: (e: any) => R | Promise<R>
+	): FastDomPromise<R> {
+		let promise = this.promise.then<R>(onFulfill, onReject)
+		return new FastDomPromise<R>(promise)
+	}
+	catch(onReject: (e: any) => Ret | Promise<Ret>): FastDomPromise<Ret> {
+		let promise = this.promise.catch(onReject)
+		return new FastDomPromise<Ret>(promise)
+	}
+	write<R>(fn: (value: Ret) => R | Promise<R>, ctx?: any): FastDomPromise<R> {
+		return this.then(function(value) {
+			return writePromise(function() {
+				return fn.call(ctx, value)
+			})
+		})
+	}
+	read<R>(fn: (value: Ret) => R | Promise<R>, ctx?: any): FastDomPromise<R> {
+		return this.then(function(value) {
+			return readPromise(function() {
+				return fn.call(ctx, value)
+			})
+		})
+	}
+}
+
+var p: Promise<number> = new FastDomPromise(new Promise(() => 123))
+
+var FastDom = {
+	read<T> (fn: () => T | Promise<T>) { return new FastDomPromise(readPromise(fn)) },
+	write<T>(fn: () => T | Promise<T>) { return new FastDomPromise(writePromise(fn))}
+}
+
+function readPromise<T>(fn: () => (T | Promise<T>), ctx?: any): Promise<T> {
+	return new Promise(function(resolve, reject) {
+		read(function() {
+			try { resolve(fn.call(ctx)) }
+			catch (e) { reject(e) }
+		})
+	})
+}
+
+function writePromise<T>(fn: () => (T | Promise<T>), ctx?: any): Promise<T> {
+	return new Promise(function(resolve, reject) {
+		write(function() {
+			try { resolve(fn.call(ctx)) }
+			catch (e) { reject(e) }
+		})
+	})
+}
+
+if (typeof Promise !== 'function') {
+	FastDom = null;
+}
+
+export default FastDom
