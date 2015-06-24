@@ -2,7 +2,7 @@ import {VoidElement} from './elementRep'
 import {ChildTag} from './nodeRep'
 
 class Input extends VoidElement<HTMLInputElement> {
-  constructor(private props: any) {
+  constructor(props: any) {
     super(props)
   }
   _render() {

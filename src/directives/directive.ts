@@ -9,12 +9,8 @@ function makeId() {
 
 export default class Directive<V> extends Observable<V> {
   private _id = makeId()
-  constructor(public name: string) {
-    super()
-  }
-  bind<E extends ElementRep<Element>>(ele: E, value: any) {
-
-  }
+  public name: string
+  bind<E extends Element>(ele: E, value: any) {}
 
   uniqueId() {
     return this.name + '@_@' + this._id
@@ -24,5 +20,3 @@ export default class Directive<V> extends Observable<V> {
     return this.uniqueId()
   }
 }
-
-

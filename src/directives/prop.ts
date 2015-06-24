@@ -3,7 +3,10 @@ import {ElementRep} from '../tags/elementRep'
 import {write} from '../render'
 
 export class Prop<V> extends Directive<V> {
-  bind<E extends ElementRep<Element>>(ele: E, value: any) {
+  constructor(public name: string) {
+    super()
+  }
+  bind<E extends Element>(ele: E, value: any) {
     let key = this.name
     this.onChange(function(oldValue, newValue) {
       write(() => ele[key] = newValue)

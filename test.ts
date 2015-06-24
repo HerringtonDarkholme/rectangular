@@ -20,7 +20,7 @@ class MyComponent extends Component {
 }
 
 function mount(elem: Tag<HTMLElement>) {
-	  document.body.appendChild(elem._render())
+  document.body.appendChild(elem._render())
 }
 
 var btnText
