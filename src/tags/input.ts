@@ -2,10 +2,10 @@ import {VoidElement} from './elementRep'
 import {ChildTag} from './nodeRep'
 
 class Input extends VoidElement<HTMLInputElement> {
-	constructor(private props: any) {
-		super(props)
-	}
-	_render() {
+  constructor(private props: any) {
+    super(props)
+  }
+  _render() {
     var elem = document.createElement('input')
     let obj = this.props
     for (let key in obj) {
@@ -19,8 +19,8 @@ class Input extends VoidElement<HTMLInputElement> {
       }
     }
     return elem
-	}
+  }
 }
 export function input(props: any) {
-	return new Input(props)
+  return new Input(props)
 }
