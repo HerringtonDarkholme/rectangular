@@ -16,4 +16,12 @@ export default class Observable<V> {
 	onChange(f: Function) {
 		this.callBacks.push(f)
 	}
+  map<U>(func: (v: V) => U): Observable<U> {
+    let obs = new Observable<U>()
+    obs.value = func(this._value)
+    this.onChange(function(oldValue, newValue) {
+      obs.value = func(newValue)
+    })
+    return obs
+  }
 }
