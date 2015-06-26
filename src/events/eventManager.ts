@@ -24,7 +24,3 @@ export class EventManager {
     }
   }
 }
-
-var eventManager = new EventManager([new DomEvent()])
-
-export default eventManager

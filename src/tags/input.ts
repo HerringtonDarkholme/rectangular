@@ -1,5 +1,6 @@
 import {VoidElement} from './elementRep'
 import {ChildTag} from './nodeRep'
+import eventManager from '../events/index'
 
 class Input extends VoidElement<HTMLInputElement> {
   constructor(props: any) {
@@ -12,7 +13,7 @@ class Input extends VoidElement<HTMLInputElement> {
       this.polymorphicBind(elem, key, obj[key])
       if (key.indexOf('value') === 0 && key in this._linkedDirectives) {
         (function(obs) {
-          elem.addEventListener('keyup', function() {
+          eventManager.on(elem, 'keyup', function() {
             obs.value = elem.value
           })
         })(this._linkedDirectives[key])

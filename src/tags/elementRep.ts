@@ -4,6 +4,7 @@ import {Prop} from '../directives/prop'
 import Observable from '../observable'
 import {ChildTag} from './nodeRep'
 import {write} from '../render'
+import eventManager from '../events/index'
 
 export class ElementRep<T extends Element> extends NodeRep<T> {
   polymorphicBind(elem: T, key: string, value: string): void
@@ -27,7 +28,7 @@ export class ElementRep<T extends Element> extends NodeRep<T> {
       elem.setAttribute(key, value)
     }
     if (typeof value === 'function') {
-      elem.addEventListener(key, value)
+      eventManager.on(elem, key, value)
     }
   }
 }
