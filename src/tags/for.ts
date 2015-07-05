@@ -31,27 +31,56 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
   }
   _render() {
     let fragment = document.createDocumentFragment()
-	let obs: T[] = Array.isArray(this.obs) ? <any>this.obs : (<any>this.obs).value
+    let func = this.func
+    let paramName = getParamNames(func)[0] || '_'
+    let funcName = func['name'] || 'anonymous_func'
+    let anchorBegin = createAnchor(`begin: For ${paramName} in ${funcName}`, true)
+    let anchorEnd = createAnchor(`end: For ${paramName} in ${funcName}`, true)
+    fragment.appendChild(anchorBegin)
+
+    let obs: T[] = Array.isArray(this.obs) ? <any>this.obs : (<any>this.obs).value
+
     for (let child of obs) {
-      let func = this.func
-	    append(fragment, func(child))
-	}
-	let observable = this.obs
-	if (observable instanceof Observable) {
-		observable.onChange(function(oldVal: T[], newVal: T[]) {
-			let childNodes = fragment.childNodes
-			let func = this.func
-			for (let i = 0, l = childNodes.length; i < l; i++) {
-				fragment.removeChild(childNodes[i])
-			}
-			for (let t of newVal) {
-				append(fragment, func(t))
-			}
-		})
-	}
-	return fragment
+      append(fragment, func(child))
+    }
+    fragment.appendChild(anchorEnd)
+    let observable = this.obs
+    if (observable instanceof Observable) {
+      observable.onChange((oldVal: T[], newVal: T[]) => {
+        let func = this.func
+        let fragment = document.createDocumentFragment()
+        var childNode = anchorBegin.nextSibling
+        let parentNode = anchorBegin.parentNode
+        while (childNode !==anchorEnd) {
+          let toRemove = childNode
+          childNode = childNode.nextSibling
+          parentNode.removeChild(toRemove)
+        }
+        for (let t of newVal) {
+          append(fragment, func(t))
+        }
+        parentNode.insertBefore(fragment, anchorEnd)
+      })
+    }
+    return fragment
   }
 }
-function For<T>(obs: T[] | Observable<T[]>, func: (t: T) => ChildTag): NodeRep<DocumentFragment> {
-	return new ForImpl<T>(obs, func)
+
+function createAnchor(text: string, debug?: boolean, persist?: boolean): Node {
+  return debug
+    ? document.createComment(text)
+    : document.createTextNode(persist ? ' ' : '')
+}
+
+const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+const ARGUMENT_NAMES = /([^\s,]+)/g;
+function getParamNames(func: Function) {
+  var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+  var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+  if(result === null) result = [];
+  return result;
+}
+
+export function For<T>(obs: T[] | Observable<T[]>, func: (t: T) => ChildTag): NodeRep<DocumentFragment> {
+  return new ForImpl<T>(obs, func)
 }

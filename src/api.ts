@@ -4,6 +4,8 @@ import {Prop} from './directives/prop'
 
 export * from './tags/div'
 export * from './tags/input'
+export {Tag} from './tags/elementRep'
+export * from './tags/for'
 
 export class Component extends Tag<HTMLElement> {
   render<T extends HTMLElement>(): Tag<T> {throw new Error('not implemented')}
@@ -22,4 +24,3 @@ export function t(initial: string[]) {
   t.value = initial[0]
   return t
 }
-export {Tag} from './tags/elementRep'

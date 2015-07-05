@@ -1,4 +1,5 @@
-import {Component, div, input, p, t, Tag} from './src/api'
+import {Component, div, input, p, t, Tag, For} from './src/api'
+import Observable from './src/observable'
 
 class MyComponent extends Component {
 	render() {
@@ -19,7 +20,7 @@ class MyComponent extends Component {
 	}
 }
 
-function mount(elem: Tag<HTMLElement>) {
+function mount(elem) {
   document.body.appendChild(elem._render())
 }
 
@@ -31,6 +32,12 @@ var btn = div({class: 'btn btn-lg', click() {alert('button clicked!')}, [p`prop`
 
 
 var change = div({class: 'btn', click() {btnText.value = Math.random()}}, 'change text');
+var obs = new Observable<string[]>()
+obs.value = ['make', 'install', 'exe']
+window['obs'] = obs
 mount(btn)
 mount(change)
 mount(new MyComponent)
+mount(For<string>(obs, (t) => {
+  return div({}, t)
+}))
