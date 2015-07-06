@@ -13,7 +13,7 @@ export class ElementRep<T extends Element> extends NodeRep<T> {
   polymorphicBind(elem: T, key: string, value: any) {
     if (key in this._linkedDirectives) {
       let directive = this._linkedDirectives[key]
-      directive.bind(elem, value)
+      directive.bind(this, value)
     }
     // if (key.indexOf('bind') === 0 && value instanceof Prop) {
     //   let realKey = key.substr(4)
@@ -44,6 +44,7 @@ export class Tag<T extends HTMLElement> extends ElementRep<T> {
   _render(): T {
     let tagName: string = (<any>this.constructor).__name__
     var elem: T = <T>document.createElement(tagName)
+	this.element = elem
     let obj = this.props
     for (let key in obj) {
       this.polymorphicBind(elem, key, obj[key])

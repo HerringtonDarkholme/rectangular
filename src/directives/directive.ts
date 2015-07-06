@@ -1,6 +1,6 @@
 import Observable from '../observable'
 import verifier from './verifier'
-import {ElementRep} from '../tags/elementRep'
+import NodeRep from '../tags/nodeRep'
 
 // cannot use non-enumerable Symbol here
 function makeId() {
@@ -10,12 +10,18 @@ function makeId() {
 export default class Directive<V> extends Observable<V> {
   private _id = makeId()
   public name: string
-  bind<E extends Element>(ele: E, value: any) {}
+  bind<E extends NodeRep<Node>>(ele: E, value: V): void {
+    this.value = value
+  }
+  unbind<E extends NodeRep<Node>>(ele: E): void {
+    this.value = null
+    this.clearCallbacks()
+  }
 
-  uniqueId() {
+  uniqueId(): string {
     return this.name + '@_@' + this._id
   }
-  toString() {
+  toString(): string {
     verifier.put(this)
     return this.uniqueId()
   }

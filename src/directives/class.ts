@@ -3,18 +3,17 @@ import {ElementRep} from '../tags/elementRep'
 import {write} from '../render'
 import Observable from '../observable'
 
-type ClassStrings = string | string[] | Observable<string>
-export class Class extends Directive<ClassStrings> {
-  bind<E extends HTMLElement>(ele: E, value: ClassStrings) {
+export class Class extends Directive<string[]> {
+  bind<E extends HTMLElement>(ele: E, value: string | string[]) {
     if (typeof value === 'string') {
+      this.value = [value]
       write(() => ele.className = value)
     } else if (Array.isArray(value)) {
+      this.value = value
       write(() => ele.classList.add(...<string[]>value))
-    } else if (value instanceof Observable) {
-      value.onChange(function(oldValue, newValue) {
-        write(() => this.bind(ele, newValue))
-      })
-      write(() => this.bind(ele, value.value))
     }
+    this.onChange(function(oldValue, newValue) {
+      write(() => ele.classList)
+    })
   }
 }
