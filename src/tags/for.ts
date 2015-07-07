@@ -23,7 +23,7 @@ function append(elem, child: ChildTag) {
 }
 
 class ForImpl<T> extends NodeRep<DocumentFragment> {
-  private children: ChildTag
+  private children: NodeRep<Node>[] = []
   constructor(
     private obs: T[] | Observable<T[]>,
     private func: (t: T) => ChildTag) {
@@ -41,12 +41,17 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
     let obs: T[] = Array.isArray(this.obs) ? <any>this.obs : (<any>this.obs).value
 
     for (let child of obs) {
-      append(fragment, func(child))
+      let childTag = func(child)
+      if (childTag instanceof NodeRep) {
+        this.children.push(childTag)
+      }
+      append(fragment, childTag)
     }
     fragment.appendChild(anchorEnd)
     let observable = this.obs
     if (observable instanceof Observable) {
       observable.onChange((oldVal: T[], newVal: T[]) => {
+        this.removeChildren()
         let func = this.func
         let fragment = document.createDocumentFragment()
         var childNode = anchorBegin.nextSibling
@@ -63,6 +68,12 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
       })
     }
     return fragment
+  }
+  removeChildren() {
+    for (let child of this.children) {
+      child.remove()
+    }
+    this.children = []
   }
 }
 
