@@ -4,6 +4,7 @@ import Observable from './src/observable'
 class MyComponent extends Component {
 	render() {
 		var inp = input({class: 'heheh', [p`value`]: 123})
+    let obs = inp['value']
 
 		inp['value'].onChange(function(o, n) {
       console.log(`old value: ${o}, new value: ${n}`)
@@ -14,7 +15,7 @@ class MyComponent extends Component {
 				div({class: 'heheh'}, 'ewwwee'),
 				div({class: 'heheh'}, inp['value']),
 				inp,
-				div({class: 'btn',click() {inp['value'].value = 123}}, 'change')
+				div({class: 'btn',click() {obs.value = 123}}, 'change')
 			)
 		)
 	}

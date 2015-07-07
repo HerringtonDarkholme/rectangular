@@ -4,12 +4,11 @@ import Directive from '../directives/directive'
 
 export type ChildTag = string | Directive<string> | NodeRep<Node>
 
-export default class NodeRep<T extends Node> extends Observable<any> {
+export default class NodeRep<T extends Node> {
   protected _linkedDirectives: {[a:string]: Directive<{}>} = {}
   public element: T
 
   constructor(public props: any = {}) {
-    super()
     // link directives
     for (let key in props) {
       let obs = verifier.pop(key)
@@ -33,14 +32,17 @@ export default class NodeRep<T extends Node> extends Observable<any> {
     for (let dir in directives) {
       directives[dir].unbind(this)
     }
-    this.clearCallbacks()
   }
 }
 
 export class TextRep extends NodeRep<Text> {
+  constructor(public props: Observable<string>) {
+    super(props)
+  }
   _render(): Text {
-    var node = document.createTextNode(this.value)
-    this.onChange(function(_, newVal) {
+    let obs = this.props
+    var node = document.createTextNode(obs.value)
+    obs.onChange(function(_, newVal) {
       node.textContent = newVal
     })
     return this.element = node

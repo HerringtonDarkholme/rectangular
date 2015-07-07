@@ -4,16 +4,19 @@ import {write} from '../render'
 import Observable from '../observable'
 
 export class Class extends Directive<string[]> {
-  bind<E extends HTMLElement>(ele: E, value: string | string[]) {
+  bind<E extends ElementRep<HTMLElement>>(ele: E, value: string | string[]) {
     if (typeof value === 'string') {
       this.value = [value]
-      write(() => ele.className = value)
+      write(() => ele.element.className = value)
     } else if (Array.isArray(value)) {
       this.value = value
-      write(() => ele.classList.add(...<string[]>value))
+      write(() => ele.element.classList.add(...<string[]>value))
     }
     this.onChange(function(oldValue, newValue) {
-      write(() => ele.classList)
+      write(() => {
+        ele.element.classList.remove(...oldValue)
+        ele.element.classList.add(...newValue)
+      })
     })
   }
 }

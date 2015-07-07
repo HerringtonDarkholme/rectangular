@@ -1,6 +1,7 @@
 import {Tag} from './tags/elementRep'
 import {TextRep} from './tags/nodeRep'
 import {Prop} from './directives/prop'
+import Observable from './observable'
 
 export * from './tags/div'
 export * from './tags/input'
@@ -20,7 +21,8 @@ export function p(name: string[]) {
 }
 
 export function t(initial: string[]) {
-  var t = new TextRep()
-  t.value = initial[0]
+  var obs = new Observable<string>()
+  obs.value = initial[0]
+  var t = new TextRep(obs)
   return t
 }
