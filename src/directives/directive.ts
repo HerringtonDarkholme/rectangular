@@ -11,10 +11,10 @@ export default class Directive<V> extends Observable<V> {
   private _id = makeId()
   public name: string
   bind<E extends NodeRep<Node>>(ele: E, value: V): void {
-    this.value = value
+    this.v = value
   }
   unbind<E extends NodeRep<Node>>(ele: E): void {
-    this.value = null
+    this.v = null
     this.clearCallbacks()
   }
 

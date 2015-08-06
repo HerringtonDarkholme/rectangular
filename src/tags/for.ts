@@ -13,7 +13,7 @@ function append(elem, child: ChildTag) {
     return
   }
   if (child instanceof Prop) {
-    let node = document.createTextNode(child.value)
+    let node = document.createTextNode(child.v)
     elem.appendChild(node)
     child.onChange(function(_, newVal) {
       write(() => node.textContent = newVal)
@@ -38,7 +38,7 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
     let anchorEnd = createAnchor(`end: For ${paramName} in ${funcName}`, true)
     fragment.appendChild(anchorBegin)
 
-    let obs: T[] = Array.isArray(this.obs) ? <any>this.obs : (<any>this.obs).value
+    let obs: T[] = Array.isArray(this.obs) ? <any>this.obs : (<any>this.obs).v
 
     for (let child of obs) {
       let childTag = func(child)

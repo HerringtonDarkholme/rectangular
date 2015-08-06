@@ -14,7 +14,7 @@ class Input extends VoidElement<HTMLInputElement> {
       if (key.indexOf('value') === 0 && key in this._linkedDirectives) {
         (function(obs) {
           eventManager.on(elem, 'keyup', function() {
-            obs.value = elem.value
+            obs.v = elem.value
           })
         })(this._linkedDirectives[key])
       }

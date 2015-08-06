@@ -6,10 +6,10 @@ import Observable from '../observable'
 export class Class extends Directive<string[]> {
   bind<E extends ElementRep<HTMLElement>>(ele: E, value: string | string[]) {
     if (typeof value === 'string') {
-      this.value = [value]
+      this.v = [value]
       write(() => ele.element.className = value)
     } else if (Array.isArray(value)) {
-      this.value = value
+      this.v = value
       write(() => ele.element.classList.add(...<string[]>value))
     }
     this.onChange(function(oldValue, newValue) {

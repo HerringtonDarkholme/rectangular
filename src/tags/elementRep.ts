@@ -66,7 +66,7 @@ export class Tag<T extends HTMLElement> extends ElementRep<T> {
       return
     }
     if (child instanceof Prop) {
-      let node = document.createTextNode(child.value)
+      let node = document.createTextNode(child.v)
       elem.appendChild(node)
       child.onChange(function(_, newVal) {
         write(() => node.textContent = newVal)

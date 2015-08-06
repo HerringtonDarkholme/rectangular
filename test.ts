@@ -15,7 +15,7 @@ class MyComponent extends Component {
 				div({class: 'heheh'}, 'ewwwee'),
 				div({class: 'heheh'}, inp['value']),
 				inp,
-				div({class: 'btn',click() {obs.value = 123}}, 'change')
+				div({class: 'btn',click() {obs.v = 123}}, 'change')
 			)
 		)
 	}
@@ -32,9 +32,9 @@ var btn = div({class: 'btn btn-lg', click() {alert('button clicked!')}, [p`prop`
 );
 
 
-var change = div({class: 'btn', click() {btnText.value = Math.random()}}, 'change text');
+var change = div({class: 'btn', click() {btnText.v = Math.random()}}, 'change text');
 var obs = new Observable<string[]>()
-obs.value = ['make', 'install', 'exe']
+obs.v = ['make', 'install', 'exe']
 window['obs'] = obs
 mount(btn)
 mount(change)

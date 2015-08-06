@@ -22,7 +22,7 @@ export function p(name: string[]) {
 
 export function t(initial: string[]) {
   var obs = new Observable<string>()
-  obs.value = initial[0]
+  obs.v = initial[0]
   var t = new TextRep(obs)
   return t
 }

@@ -13,7 +13,7 @@ export default class NodeRep<T extends Node> {
     for (let key in props) {
       let obs = verifier.pop(key)
       if (!obs) continue
-      obs.value = props[key]
+      obs.v = props[key]
       this._linkedDirectives[key] = obs
       this[obs.name] = obs
     }
@@ -41,7 +41,7 @@ export class TextRep extends NodeRep<Text> {
   }
   _render(): Text {
     let obs = this.props
-    var node = document.createTextNode(obs.value)
+    var node = document.createTextNode(obs.v)
     obs.onChange(function(_, newVal) {
       node.textContent = newVal
     })

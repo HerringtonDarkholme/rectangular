@@ -2,10 +2,10 @@ export default class Observable<V> {
   private _value: V
   private callBacks: Function[] = []
 
-  get value() {
+  get v() {
     return this._value
   }
-  set value(newValue: V) {
+  set v(newValue: V) {
     let oldValue = this._value
     this._value = newValue
     if (oldValue == newValue) return
@@ -21,9 +21,9 @@ export default class Observable<V> {
   }
   map<U>(func: (v: V) => U): Observable<U> {
     let obs = new Observable<U>()
-    obs.value = func(this._value)
+    obs.v = func(this._value)
     this.onChange(function(oldValue, newValue) {
-      obs.value = func(newValue)
+      obs.v = func(newValue)
     })
     return obs
   }
