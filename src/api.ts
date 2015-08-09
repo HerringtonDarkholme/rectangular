@@ -7,6 +7,7 @@ export * from './tags/div'
 export * from './tags/input'
 export {Tag} from './tags/elementRep'
 export * from './tags/for'
+export * from './tags/if'
 
 export class Component extends Tag<HTMLElement> {
   render<T extends HTMLElement>(): Tag<T> {throw new Error('not implemented')}

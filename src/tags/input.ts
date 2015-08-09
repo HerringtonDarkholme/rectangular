@@ -16,6 +16,7 @@ class Input extends VoidElement<HTMLInputElement> {
           eventManager.on(elem, 'keyup', function() {
             obs.v = elem.value
           })
+          obs.onChange((_, v) => { elem.value = v})
         })(this._linkedDirectives[key])
       }
     }

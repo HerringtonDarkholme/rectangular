@@ -2,7 +2,7 @@
 /// <reference path='../typings/promise.d.ts' />
 
 // Normalize rAF
-var raf = window.requestAnimationFrame
+var raf: (cb) => void = window.requestAnimationFrame
   || window.webkitRequestAnimationFrame
   || window.mozRequestAnimationFrame
   || window.msRequestAnimationFrame

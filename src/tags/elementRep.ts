@@ -44,7 +44,7 @@ export class Tag<T extends HTMLElement> extends ElementRep<T> {
   _render(): T {
     let tagName: string = (<any>this.constructor).__name__
     var elem: T = <T>document.createElement(tagName)
-	this.element = elem
+    this.element = elem
     let obj = this.props
     for (let key in obj) {
       this.polymorphicBind(elem, key, obj[key])
@@ -65,7 +65,7 @@ export class Tag<T extends HTMLElement> extends ElementRep<T> {
       elem.appendChild(child._render())
       return
     }
-    if (child instanceof Prop) {
+    if (child instanceof Observable) {
       let node = document.createTextNode(child.v)
       elem.appendChild(node)
       child.onChange(function(_, newVal) {

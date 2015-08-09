@@ -2,7 +2,7 @@ import Observable from '../observable'
 import verifier from '../directives/verifier'
 import Directive from '../directives/directive'
 
-export type ChildTag = string | Directive<string> | NodeRep<Node>
+export type ChildTag = string | Observable<string> | NodeRep<Node>
 
 export default class NodeRep<T extends Node> {
   protected _linkedDirectives: {[a:string]: Directive<{}>} = {}
