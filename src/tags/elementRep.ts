@@ -6,7 +6,8 @@ import {ChildTag} from './nodeRep'
 import {write} from '../render'
 import eventManager from '../events/index'
 
-export class ElementRep<T extends Element> extends NodeRep<T> {
+export
+abstract class ElementRep<T extends Element> extends NodeRep<T> {
   polymorphicBind(elem: T, key: string, value: string): void
   polymorphicBind(elem: T, key: string, value: Function): void
   polymorphicBind(elem: T, key: string, value: Directive<{}>): void
@@ -33,7 +34,8 @@ export class ElementRep<T extends Element> extends NodeRep<T> {
   }
 }
 
-export class VoidElement<T extends HTMLElement> extends ElementRep<T> {}
+export
+abstract class VoidElement<T extends HTMLElement> extends ElementRep<T> {}
 
 export class Tag<T extends HTMLElement> extends ElementRep<T> {
   public children: ChildTag[]

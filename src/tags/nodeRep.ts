@@ -4,7 +4,7 @@ import Directive from '../directives/directive'
 
 export type ChildTag = string | Observable<string> | NodeRep<Node>
 
-export default class NodeRep<T extends Node> {
+abstract class NodeRep<T extends Node> {
   protected _linkedDirectives: {[a:string]: Directive<{}>} = {}
   public element: T
 
@@ -19,9 +19,7 @@ export default class NodeRep<T extends Node> {
     }
   }
 
-  _render(): T {
-    throw new Error('Not Implemented')
-  }
+  abstract _render(): T
 
   remove(): void {
     let element = this.element
@@ -34,6 +32,8 @@ export default class NodeRep<T extends Node> {
     }
   }
 }
+
+export default NodeRep
 
 export class TextRep extends NodeRep<Text> {
   constructor(public props: Observable<string>) {
