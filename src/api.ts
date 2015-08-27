@@ -2,6 +2,7 @@ import {Tag} from './tags/elementRep'
 import {TextRep} from './tags/nodeRep'
 import {Prop} from './directives/prop'
 import Observable from './observable'
+import {Var} from './overkill/index'
 
 export * from './tags/div'
 export * from './tags/input'
