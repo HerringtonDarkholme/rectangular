@@ -1,12 +1,14 @@
-/* globals describe, it */
-'use strict'
+/// <reference path='../typings/mocha.d.ts' />
+/// <reference path='../typings/node.d.ts' />
+
+import ok = require('../src/overkill/ok')
+
 var assert = require('assert')
-var ok = require('./ok')
-var Rx = ok.RxImp
-var Obs = ok.ObsImp
-var Var = ok.VarImp
-var caller = ok._caller
-var mockInWatch = ok.execInWatch
+var Rx: any = ok.RxImp
+var Obs: any = ok.ObsImp
+var Var: any = ok.VarImp
+var caller: any = ok._caller
+var mockInWatch: any = ok.execInWatch
 
 describe('Var', function() {
   var CONST1 = 42

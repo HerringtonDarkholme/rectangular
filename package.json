@@ -1,8 +1,13 @@
 {
   "name": "rectangular",
   "version": "0.0.1",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha  --compilers ts:espower-typescript/guess"
+  },
   "devDependencies": {
     "awesome-typescript-loader": "^0.11.3",
+    "espower-typescript": "^1.0.0",
+    "mocha": "^2.2.5",
     "typescript": "^1.6.0-dev.20150810"
   },
   "dependencies": {
