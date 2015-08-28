@@ -2,6 +2,10 @@
   "compilerOptions": {
     "noImplicitAny": false,
     "module": "commonjs",
-    "experimentalDecorators": true
-  }
+    "experimentalDecorators": true,
+    "outDir": "dist"
+  },
+  "files": [
+    "src/overkill/ok"
+  ]
 }

@@ -1,14 +1,13 @@
 /// <reference path='../typings/mocha.d.ts' />
 /// <reference path='../typings/node.d.ts' />
 
-import ok = require('../src/overkill/ok')
-
-var assert = require('assert')
-var Rx: any = ok.RxImp
-var Obs: any = ok.ObsImp
-var Var: any = ok.VarImp
-var caller: any = ok._caller
-var mockInWatch: any = ok.execInWatch
+var assert = require('power-assert')
+var ok = require('../dist/ok')
+var Rx = ok.RxImp
+var Obs = ok.ObsImp
+var Var = ok.VarImp
+var caller = ok._caller
+var mockInWatch = ok.execInWatch
 
 describe('Var', function() {
   var CONST1 = 42
