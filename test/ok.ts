@@ -173,6 +173,23 @@ describe('Obs', function() {
     assert(caller.callers.length === 1)
   })
 
+  it('should make pure subscription', function() {
+    var a = new Var(123)
+    var b = new Var(456)
+    var calledTimes = 0
+    new Obs(() => a.apply(), (n, o) => {
+      b.apply()
+      assert(n === 456)
+      assert(o === 123)
+      calledTimes++
+    })
+    assert(calledTimes === 0)
+    a.update(456)
+    assert(calledTimes === 1)
+    b.update(123)
+    assert(calledTimes === 1)
+  })
+
 })
 
 describe('Rx', function() {

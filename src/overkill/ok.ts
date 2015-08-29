@@ -24,12 +24,13 @@ export class Caller<T> {
 }
 
 export type _ = {}
-export type Observer = ObsImp<_> | RxImp<_, _>
+export type Observer = ObsImp<_, _> | RxImp<_, _>
 export type Observee = VarImp<_, _> | RxImp<_, _>
 
 
+export const UNINTIALIZE: any = {}
 export abstract class Signal<T, C> {
-  protected value: T
+  public value: T = UNINTIALIZE
   abstract dispose(v?: Observer): void
   public context: C
 }
@@ -38,10 +39,18 @@ export abstract class Signal<T, C> {
 // true when observer calls observee, otherwise false
 var inWatch = false
 export function execInWatch(fn: Function) {
+  let oldState = inWatch
   inWatch = true
   fn()
-  inWatch = false
+  inWatch = oldState
 }
+export function execOutOfWatch(fn: Function) {
+  let oldState = inWatch
+  inWatch = false
+  fn()
+  inWatch = oldState
+}
+
 /*
  * In dependency graph, we have three kinds of node
  * Var: the root of graph, the source of change. observed by Rx/Obs
@@ -118,12 +127,16 @@ export class VarImp<T, C> extends Signal<T, C> {
   }
 }
 
-export class ObsImp<C> extends Signal<void, C> {
+type Subscriber<V> = (n: V, o: V) => void
+const NOOP = () => void 0
+export class ObsImp<V, C> extends Signal<V, C> {
   private observees: Array<Observee> = []
-  private expr: (ctx: C) => void
-  constructor(expr: (ctx: C) => void) {
+  private expr: (ctx: C) => V
+  private sideEffect: Subscriber<V>
+  constructor(expr: (ctx: C) => V, sideEffect?: Subscriber<V>) {
     super()
     this.expr = expr
+    this.sideEffect = sideEffect || NOOP
     inWatch = true
     this.computeValue()
     inWatch = false
@@ -133,9 +146,16 @@ export class ObsImp<C> extends Signal<void, C> {
       sig.retireFrom(this)
     }
     this.observees = []
-    caller.withValue(this)(() => {
-      return this.expr.call(this.context, this.context)
-    })
+    let ctx = this.context
+    let fn = this.expr.bind(ctx, ctx)
+    let newValue = caller.withValue(this)(fn)
+    if (this.value !== UNINTIALIZE) {
+      let oldState = inWatch
+      inWatch = false
+      this.sideEffect(newValue, this.value)
+      inWatch = oldState
+    }
+    this.value = newValue
   }
   watch(child: Observee) {
     this.observees.push(child)
@@ -150,7 +170,6 @@ export class ObsImp<C> extends Signal<void, C> {
   }
 }
 
-const UNINTIALIZE: any = {}
 export class RxImp<T, C> extends Signal<T, C> {
   private observers = new Set<Observer>()
   private observees: Array<Observee> = []
@@ -158,16 +177,14 @@ export class RxImp<T, C> extends Signal<T, C> {
   constructor(expr: (ctx: C) => T) {
     super()
     this.expr = expr
-    this.value = UNINTIALIZE
   }
   computeValue() {
     for (let sig of this.observees) {
       sig.retireFrom(this)
     }
     this.observees = []
-    let newValue = caller.withValue(this)(() => {
-        return this.expr.call(this.context, this.context)
-      })
+    let ctx = this.context
+    let newValue = caller.withValue(this)(this.expr.bind(ctx, ctx))
     if (this.value !== newValue) {
       this.value = newValue
       let obs = this.observers
@@ -226,3 +243,12 @@ var caller = new Caller<Observer>(nilSig)
 
 export var _caller = caller
 
+
+export function peek(o: Observee) {
+  if (o.value !== UNINTIALIZE) return o.value
+  let oldState = inWatch
+  inWatch = false
+  let ret = o.apply()
+  inWatch = oldState
+  return ret
+}
