@@ -3,9 +3,10 @@ import Observable from './src/observable'
 
 class MyComponent extends Component {
   render() {
-    var inp = input({class: 'heheh', [p`value`]: 123})
+    var inp = input({class: 'heheh', [p`value`]: '123'})
     let obs = inp['value']
 
+    window['obs'] = inp['value']
     // inp['value'].onChange(function(o, n) {
     //   console.log(`old value: ${o}, new value: ${n}`)
     // })
@@ -16,8 +17,8 @@ class MyComponent extends Component {
         div({class: 'heheh'}, inp['value']),
         inp,
         div({class: 'btn',click() {
-          todos.v = todos.v.concat([obs.v])
-          obs.v = ''
+          todos.v = todos.v.concat([''+obs.v()])
+          obs.v('')
         }}, 'add'),
         // div({}, todos.map(t => '' + t.length)),
         If(todos.map(t => t.length > 5),

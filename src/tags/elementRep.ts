@@ -15,12 +15,15 @@ abstract class ElementRep<T extends Element> extends NodeRep<T> {
     if (key in this._linkedDirectives) {
       let directive = this._linkedDirectives[key]
       directive.bind(this, value)
+      return
     }
     if (typeof value === 'string') {
       elem.setAttribute(key, value)
+      return
     }
     if (typeof value === 'function') {
       eventManager.on(elem, key, value)
+      return
     }
   }
 }

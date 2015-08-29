@@ -10,9 +10,9 @@ export class Prop<V> extends Directive<V> {
   bind<E extends ElementRep<Element>>(ele: E, value: any) {
     super.bind(ele, value)
     let key = this.name
-    Obs(this.v, function(newValue) {
+    Obs(() => {
+      let newValue = this.v()
       write(() => ele.element[key] = newValue)
     })
-    ele.element[key] = value
   }
 }

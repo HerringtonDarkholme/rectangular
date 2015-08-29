@@ -1,6 +1,6 @@
 import {Prop} from '../directives/prop'
 import {write} from '../render'
-import NodeRep, {ChildTag} from './nodeRep'
+import NodeRep, {ChildTag, TextRep} from './nodeRep'
 import {isSignal, Obs} from '../overkill/index'
 
 export function append(elem, child: ChildTag) {
@@ -13,11 +13,8 @@ export function append(elem, child: ChildTag) {
     return
   }
   if (isSignal(child)) {
-    let node = document.createTextNode(child())
-    elem.appendChild(node)
-    Obs<string, {}>(child, function(newVal) {
-      write(() => node.textContent = newVal)
-    })
+    let text = new TextRep(child)
+    elem.appendChild(text._render())
     return
   }
 }
