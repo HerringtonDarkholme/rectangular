@@ -1,7 +1,7 @@
 import {Prop} from '../directives/prop'
 import {write} from '../render'
 import NodeRep, {ChildTag} from './nodeRep'
-import Observable from '../observable'
+import {isSignal, Obs} from '../overkill/index'
 
 export function append(elem, child: ChildTag) {
   if (typeof child === 'string') {
@@ -12,10 +12,10 @@ export function append(elem, child: ChildTag) {
     elem.appendChild(child._render())
     return
   }
-  if (child instanceof Observable) {
-    let node = document.createTextNode(child.v)
+  if (isSignal(child)) {
+    let node = document.createTextNode(child())
     elem.appendChild(node)
-    child.onChange(function(_, newVal) {
+    Obs<string, {}>(child, function(newVal) {
       write(() => node.textContent = newVal)
     })
     return

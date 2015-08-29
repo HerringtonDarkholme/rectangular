@@ -1,8 +1,8 @@
-import Observable from '../observable'
+import {Var, Obs} from '../overkill/index'
 import verifier from '../directives/verifier'
 import Directive from '../directives/directive'
 
-export type ChildTag = string | Observable<string> | NodeRep<Node>
+export type ChildTag = string | Var<string> | NodeRep<Node>
 
 abstract class NodeRep<T extends Node> {
   protected _linkedDirectives: {[a:string]: Directive<{}>} = {}
@@ -13,7 +13,6 @@ abstract class NodeRep<T extends Node> {
     for (let key in props) {
       let obs = verifier.pop(key)
       if (!obs) continue
-      obs.v = props[key]
       this._linkedDirectives[key] = obs
       this[obs.name] = obs
     }
@@ -36,14 +35,14 @@ abstract class NodeRep<T extends Node> {
 export default NodeRep
 
 export class TextRep extends NodeRep<Text> {
-  constructor(public props: Observable<string>) {
+  constructor(public props: Var<string>) {
     super(props)
   }
   _render(): Text {
     let obs = this.props
-    var node = document.createTextNode(obs.v)
-    obs.onChange(function(_, newVal) {
-      node.textContent = newVal
+    var node = document.createTextNode(obs())
+    Obs<string, {}>(obs, (n) => {
+      node.textContent =  n
     })
     return this.element = node
   }

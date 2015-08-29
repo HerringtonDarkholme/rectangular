@@ -1,6 +1,7 @@
 import {VoidElement} from './elementRep'
 import {ChildTag} from './nodeRep'
 import eventManager from '../events/index'
+import {Obs} from '../overkill/index'
 
 class Input extends VoidElement<HTMLInputElement> {
   constructor(props: any) {
@@ -8,15 +9,15 @@ class Input extends VoidElement<HTMLInputElement> {
   }
   _render() {
     var elem = document.createElement('input')
+    this.element = elem
     let obj = this.props
     for (let key in obj) {
       this.polymorphicBind(elem, key, obj[key])
-      if (key.indexOf('value') === 0 && key in this._linkedDirectives) {
+      if (key.indexOf('value@_@') === 0 && key in this._linkedDirectives) {
         (function(obs) {
           eventManager.on(elem, 'keyup', function() {
-            obs.v = elem.value
+            obs.v(elem.value)
           })
-          obs.onChange((_, v) => { elem.value = v})
         })(this._linkedDirectives[key])
       }
     }

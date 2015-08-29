@@ -1,9 +1,9 @@
 import NodeRep from './nodeRep'
 import Directive from '../directives/directive'
 import {Prop} from '../directives/prop'
-import Observable from '../observable'
 import {ChildTag} from './nodeRep'
 import {write} from '../render'
+import {append} from './util'
 import eventManager from '../events/index'
 
 export
@@ -16,15 +16,6 @@ abstract class ElementRep<T extends Element> extends NodeRep<T> {
       let directive = this._linkedDirectives[key]
       directive.bind(this, value)
     }
-    // if (key.indexOf('bind') === 0 && value instanceof Prop) {
-    //   let realKey = key.substr(4)
-    //   value.onChange(function(oldVal, newVal) {
-    //     elem[realKey]  = newVal
-    //   })
-    //   this[realKey] = value
-    //   elem[realKey] = value.value
-    //   return
-    // }
     if (typeof value === 'string') {
       elem.setAttribute(key, value)
     }
@@ -53,28 +44,8 @@ export class Tag<T extends HTMLElement> extends ElementRep<T> {
     }
     let children = this.children
     for (let child of children) {
-      this.append(elem, child)
+      append(elem, child)
     }
     return elem
   }
-
-  append(elem, child: ChildTag) {
-    if (typeof child === 'string') {
-      elem.appendChild(document.createTextNode(child))
-      return
-    }
-    if (child instanceof NodeRep) {
-      elem.appendChild(child._render())
-      return
-    }
-    if (child instanceof Observable) {
-      let node = document.createTextNode(child.v)
-      elem.appendChild(node)
-      child.onChange(function(_, newVal) {
-        write(() => node.textContent = newVal)
-      })
-      return
-    }
-  }
 }
-

@@ -6,9 +6,9 @@ class MyComponent extends Component {
     var inp = input({class: 'heheh', [p`value`]: 123})
     let obs = inp['value']
 
-    inp['value'].onChange(function(o, n) {
-      console.log(`old value: ${o}, new value: ${n}`)
-    })
+    // inp['value'].onChange(function(o, n) {
+    //   console.log(`old value: ${o}, new value: ${n}`)
+    // })
 
     return (
       div({class: 'control-form'},
@@ -19,7 +19,7 @@ class MyComponent extends Component {
           todos.v = todos.v.concat([obs.v])
           obs.v = ''
         }}, 'add'),
-        div({}, todos.map(t => '' + t.length)),
+        // div({}, todos.map(t => '' + t.length)),
         If(todos.map(t => t.length > 5),
            () => div({class: 'warn'}, 'Too many todos!'))
       ))
@@ -37,7 +37,7 @@ var btn = div({class: 'btn btn-lg', click() {alert('button clicked!')}, [p`prop`
 );
 
 
-var change = div({class: 'btn', click() {btnText.v = Math.random()}}, 'change text');
+var change = div({class: 'btn', click() {btnText.props(Math.random())}}, 'change text');
 var todos = new Observable<string[]>()
 todos.v = ['make', 'install', 'exe']
 mount(btn)

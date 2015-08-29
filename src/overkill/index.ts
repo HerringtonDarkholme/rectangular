@@ -1,6 +1,8 @@
 /// <reference path='../../typings/es6-collections.d.ts' />
 import 'es6-collections'
 import {Signal, VarImp, RxImp, ObsImp} from './ok'
+import {Subscriber as Sub} from './ok'
+export {ObsImp} from './ok'
 
 export type _ = {}
 
@@ -52,12 +54,16 @@ export function Rx<T, C>(fn: (c: C) => T): Rx<T, C> {
   return func
 }
 
-export function Obs<C>(fn: (c: C) => void): ObsImp<C> {
-  return new ObsImp(fn)
+export
+function Obs<V, C>(fn: (c: C) => V, sub?: Sub<V>): ObsImp<V, C> {
+  return new ObsImp(fn, sub)
 }
 
-export function getSinalFromFunc(f: Function): Signal<_, _> {
+export function getSinal(f: Var<_> | Rx<_, _>): Signal<_, _> {
   return funcMap.get(f)
+}
+export function isSignal(f: any): f is Var<_> | Rx<_, _> {
+  return funcMap.get(f) !== undefined
 }
 
 export function dispose(f: Function) {

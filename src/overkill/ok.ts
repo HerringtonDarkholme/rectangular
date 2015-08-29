@@ -127,7 +127,7 @@ export class VarImp<T, C> extends Signal<T, C> {
   }
 }
 
-type Subscriber<V> = (n: V, o: V) => void
+export type Subscriber<V> = (n: V, o: V) => void
 const NOOP = () => void 0
 export class ObsImp<V, C> extends Signal<V, C> {
   private observees: Array<Observee> = []

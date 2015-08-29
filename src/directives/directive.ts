@@ -1,4 +1,4 @@
-import Observable from '../observable'
+import {Var, Obs, dispose} from '../overkill/index'
 import verifier from './verifier'
 import NodeRep from '../tags/nodeRep'
 
@@ -7,15 +7,17 @@ function makeId() {
   return Math.random().toString(36).substr(2, 5)
 }
 
-export default class Directive<V> extends Observable<V> {
+export default class Directive<V> {
   private _id = makeId()
   public name: string
+  public v: Var<V>
   bind<E extends NodeRep<Node>>(ele: E, value: V): void {
-    this.v = value
+    if (this.v) throw new Error('cannot rebind Directive')
+    this.v = Var(value)
   }
   unbind<E extends NodeRep<Node>>(ele: E): void {
+    dispose(this.v)
     this.v = null
-    this.clearCallbacks()
   }
 
   uniqueId(): string {
