@@ -14,7 +14,7 @@ abstract class NodeRep<T extends Node> {
       let obs = verifier.pop(key)
       if (!obs) continue
       this._linkedDirectives[key] = obs
-      this[obs.name] = obs
+      this[obs.name] = obs.v
     }
   }
 
