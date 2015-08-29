@@ -17,8 +17,8 @@ class MyComponent extends Component {
         div({class: 'heheh'}, inp['value']),
         inp,
         div({class: 'btn',click() {
-          todos.v = todos.v.concat([''+obs.v()])
-          obs.v('')
+          todos.v = todos.v.concat([''+obs()])
+          obs('')
         }}, 'add'),
         // div({}, todos.map(t => '' + t.length)),
         If(todos.map(t => t.length > 5),
