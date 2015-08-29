@@ -54,6 +54,8 @@ export function Rx<T, C>(fn: (c: C) => T): Rx<T, C> {
   return func
 }
 
+export function Obs<V, C>(fn: Var<V>, sub?: Sub<V>): ObsImp<V, C>
+export function Obs<V, C>(fn: Rx<V, C>, sub?: Sub<V>): ObsImp<V, C>
 export
 function Obs<V, C>(fn: (c: C) => V, sub?: Sub<V>): ObsImp<V, C> {
   return new ObsImp(fn, sub)

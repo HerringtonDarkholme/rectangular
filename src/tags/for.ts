@@ -73,6 +73,8 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
   }
 }
 
+export function For<T>(obs: Observable<T[]> , func: (t: T) => ChildTag): NodeRep<DocumentFragment>
+export function For<T>(obs: T[] , func: (t: T) => ChildTag): NodeRep<DocumentFragment>
 export function For<T>(obs: T[] | Observable<T[]>, func: (t: T) => ChildTag): NodeRep<DocumentFragment> {
   return new ForImpl<T>(obs, func)
 }

@@ -44,6 +44,6 @@ todos.v = ['make', 'install', 'exe']
 mount(btn)
 mount(change)
 mount(new MyComponent)
-mount(For<string>(todos, (t) => {
+mount(For(todos, (t) => {
   return div({}, t)
 }))
