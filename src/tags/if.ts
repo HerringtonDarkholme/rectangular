@@ -1,4 +1,4 @@
-import Observable from '../observable'
+import {Var, Obs, isSignal, dispose} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
@@ -7,7 +7,7 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
   private _anchorBegin: Node
   private _anchorEnd: Node
   constructor(
-    private obs: boolean | Observable<boolean>,
+    private obs: Var<boolean>,
     private func: () => NodeRep<N>
   ) {
     super()
@@ -21,23 +21,18 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
     let func = this.func
     let anchorBegin = this._anchorBegin
     let anchorEnd = this._anchorEnd
-    let bool: boolean
     let obs = this.obs
     fragment.appendChild(anchorBegin)
-    if (typeof obs === 'boolean') {
-      bool = obs
-    } else {
-      bool = obs.v
-      obs.onChange((oldVal, newVal) => {
-        if (newVal) {
-          this.child = func()
-          let parentNode = anchorBegin.parentNode
-          parentNode.insertBefore(this.child._render(), anchorEnd)
-        } else {
-          this.child.remove()
-        }
-      })
-    }
+    let bool = obs()
+    Obs(obs, (newVal) => {
+      if (newVal) {
+        this.child = func()
+        let parentNode = anchorBegin.parentNode
+        parentNode.insertBefore(this.child._render(), anchorEnd)
+      } else {
+        this.child.remove()
+      }
+    })
     if (bool) {
       this.child = func()
       fragment.appendChild(this.child._render())
@@ -61,8 +56,13 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
   }
 }
 
-export function If<N extends Node>(
-  obs: boolean | Observable<boolean>,
-  func: () => NodeRep<N>): NodeRep<DocumentFragment> {
-  return new IfImpl<N>(obs, func)
+type FragRep = NodeRep<DocumentFragment>
+export function If<N extends Node>(obs: boolean, func: () => NodeRep<N>): FragRep
+export function If<N extends Node>(obs: Var<boolean>, func: () => NodeRep<N>): FragRep
+export function If<N extends Node>(obs: boolean | Var<boolean>, func: () => NodeRep<N>): FragRep {
+  if (typeof obs === 'boolean') {
+    return new IfImpl<N>(Var(obs), func)
+  } else {
+    return new IfImpl<N>(obs, func)
+  }
 }

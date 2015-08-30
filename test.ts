@@ -1,5 +1,5 @@
 import {Component, div, input, p, t, Tag, For, If} from './src/api'
-import {Obs, Var} from './src/overkill/index'
+import {Obs, Var, Rx} from './src/overkill/index'
 
 class MyComponent extends Component {
   render() {
@@ -19,11 +19,11 @@ class MyComponent extends Component {
         div({class: 'btn',click() {
           todos(todos().concat([obs()]))
           obs('')
-        }}, 'add')
+        }}, 'add'),
+        div({}, Rx(() => '' + todos().length)),
+        If(Rx(() => todos().length > 5),
+           () => div({class: 'warn'}, 'Too many todos!'))
       ))
-        // div({}, todos.map(t => '' + t.length)),
-        // If(todos.map(t => t.length > 5),
-        //    () => div({class: 'warn'}, 'Too many todos!'))
   }
 }
 
