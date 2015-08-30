@@ -6,11 +6,6 @@ class MyComponent extends Component {
     var inp = input({class: 'heheh', [p`value`]: '123'})
     let obs = inp['value']
 
-    window['obs'] = inp['value']
-    // inp['value'].onChange(function(o, n) {
-    //   console.log(`old value: ${o}, new value: ${n}`)
-    // })
-
     return (
       div({class: 'control-form'},
         div({class: 'heheh'}, 'ewwwee'),
@@ -40,7 +35,6 @@ var btn = div({class: 'btn btn-lg', click() {alert('button clicked!')}, [p`prop`
 
 var change = div({class: 'btn', click() {btnText(Math.random())}}, 'change text');
 var todos = Var(['make', 'install', 'exe'])
-window['todos'] = todos
 mount(btn)
 mount(change)
 mount(new MyComponent)
