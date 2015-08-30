@@ -23,7 +23,5 @@ export function p(name: string[]) {
 }
 
 export function t(initial: string[]) {
-  var obs = Var(initial[0])
-  var t = new TextRep(obs)
-  return t
+  return Var(initial[0])
 }

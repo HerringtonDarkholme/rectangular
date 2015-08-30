@@ -1,4 +1,4 @@
-import Observable from '../observable'
+import {Var, Obs, isSignal, dispose} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
@@ -8,7 +8,7 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
   private _anchorEnd: Node
 
   constructor(
-    private obs: T[] | Observable<T[]>,
+    private obs: Var<T[]>,
     private func: (t: T) => ChildTag) {
     super()
     let paramName = getParamNames(func)[0] || '_'
@@ -25,7 +25,7 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
 
     fragment.appendChild(anchorBegin)
 
-    let obs: T[] = Array.isArray(observable) ? observable : (<any>observable).v
+    let obs: T[] = observable()
 
     for (let child of obs) {
       let childTag = func(child)
@@ -35,23 +35,21 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
       append(fragment, childTag)
     }
     fragment.appendChild(anchorEnd)
-    if (observable instanceof Observable) {
-      observable.onChange((oldVal: T[], newVal: T[]) => {
-        this.removeChildren()
-        let func = this.func
-        let fragment = document.createDocumentFragment()
-        var childNode = anchorBegin.nextSibling
-        let parentNode = anchorBegin.parentNode
-        for (let t of newVal) {
-          let childTag = func(t)
-          append(fragment, childTag)
-          if (childTag instanceof NodeRep) {
-            this.children.push(childTag)
-          }
+    Obs(observable, (newVal: T[]) => {
+      this.removeChildren()
+      let func = this.func
+      let fragment = document.createDocumentFragment()
+      var childNode = anchorBegin.nextSibling
+      let parentNode = anchorBegin.parentNode
+      for (let t of newVal) {
+        let childTag = func(t)
+        append(fragment, childTag)
+        if (childTag instanceof NodeRep) {
+          this.children.push(childTag)
         }
-        parentNode.insertBefore(fragment, anchorEnd)
-      })
-    }
+      }
+      parentNode.insertBefore(fragment, anchorEnd)
+    })
     return fragment
   }
   removeChildren() {
@@ -68,13 +66,18 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
       parent.removeChild(this._anchorBegin)
       parent.removeChild(this._anchorEnd)
     }
+    dispose(this.obs)
     this._anchorBegin = null
     this._anchorEnd = null
   }
 }
 
-export function For<T>(obs: Observable<T[]> , func: (t: T) => ChildTag): NodeRep<DocumentFragment>
+export function For<T>(obs: Var<T[]> , func: (t: T) => ChildTag): NodeRep<DocumentFragment>
 export function For<T>(obs: T[] , func: (t: T) => ChildTag): NodeRep<DocumentFragment>
-export function For<T>(obs: T[] | Observable<T[]>, func: (t: T) => ChildTag): NodeRep<DocumentFragment> {
-  return new ForImpl<T>(obs, func)
+export function For<T>(obs: T[] | Var<T[]>, func: (t: T) => ChildTag): NodeRep<DocumentFragment> {
+  if (Array.isArray(obs)) {
+    return new ForImpl<T>(Var(obs), func)
+  } else {
+    return new ForImpl<T>(obs, func)
+  }
 }

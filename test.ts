@@ -1,5 +1,5 @@
 import {Component, div, input, p, t, Tag, For, If} from './src/api'
-import Observable from './src/observable'
+import {Obs, Var} from './src/overkill/index'
 
 class MyComponent extends Component {
   render() {
@@ -17,13 +17,13 @@ class MyComponent extends Component {
         div({class: 'heheh'}, inp['value']),
         inp,
         div({class: 'btn',click() {
-          todos.v = todos.v.concat([''+obs()])
+          todos(todos().concat([obs()]))
           obs('')
-        }}, 'add'),
-        // div({}, todos.map(t => '' + t.length)),
-        If(todos.map(t => t.length > 5),
-           () => div({class: 'warn'}, 'Too many todos!'))
+        }}, 'add')
       ))
+        // div({}, todos.map(t => '' + t.length)),
+        // If(todos.map(t => t.length > 5),
+        //    () => div({class: 'warn'}, 'Too many todos!'))
   }
 }
 
@@ -38,9 +38,9 @@ var btn = div({class: 'btn btn-lg', click() {alert('button clicked!')}, [p`prop`
 );
 
 
-var change = div({class: 'btn', click() {btnText.props(Math.random())}}, 'change text');
-var todos = new Observable<string[]>()
-todos.v = ['make', 'install', 'exe']
+var change = div({class: 'btn', click() {btnText(Math.random())}}, 'change text');
+var todos = Var(['make', 'install', 'exe'])
+window['todos'] = todos
 mount(btn)
 mount(change)
 mount(new MyComponent)
