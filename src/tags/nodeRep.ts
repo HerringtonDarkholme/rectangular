@@ -1,14 +1,16 @@
 import {Var, Obs} from '../overkill/index'
 import verifier from '../directives/verifier'
 import Directive from '../directives/directive'
+import EventEmitter from '../eventEmitter'
 
 export type ChildTag = string | Var<string> | NodeRep<Node>
 
-abstract class NodeRep<T extends Node> {
+abstract class NodeRep<T extends Node> extends EventEmitter {
   protected _linkedDirectives: {[a:string]: Directive<{}>} = {}
   public element: T
 
   constructor(public props: any = {}) {
+    super()
     // link directives
     for (let key in props) {
       let obs = verifier.pop(key)
