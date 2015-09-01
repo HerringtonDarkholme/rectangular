@@ -13,13 +13,28 @@ export class Component extends Tag<HTMLElement> {
   render<T extends HTMLElement>(): Tag<T> {
     throw new Error('not implemented')
   }
+  remove(): void {}
+
+  preRender() {}
+  postRender() {}
+  preRemove() {}
+  postRemove() {}
+
   _render() {
+    this.preRender()
     let componentTag = document.createElement(
       getTagNameFromClassName(this.constructor['name'])
     )
     let inner = this.render()._render()
     componentTag.appendChild(inner)
+    this.postRender()
     return componentTag
+  }
+
+  _remove() {
+    this.preRemove()
+    this.remove()
+    this.postRemove()
   }
 }
 

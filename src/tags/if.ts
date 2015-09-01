@@ -30,7 +30,7 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
         let parentNode = anchorBegin.parentNode
         parentNode.insertBefore(this.child._render(), anchorEnd)
       } else {
-        this.child.remove()
+        this.child._remove()
       }
     })
     if (bool) {
@@ -41,9 +41,9 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
     return fragment
   }
 
-  remove() {
+  _remove() {
     if (this.child) {
-      this.child.remove()
+      this.child._remove()
       this.child = null
     }
     let parent = this._anchorBegin.parentNode

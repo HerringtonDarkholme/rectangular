@@ -1,4 +1,4 @@
-import {Var, Obs, isSignal, dispose} from '../overkill/index'
+import {Var, Obs, isSignal, ObsImp} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
@@ -6,9 +6,10 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
   private children: NodeRep<Node>[] = []
   private _anchorBegin: Node
   private _anchorEnd: Node
+  private obs: ObsImp<T[], {}>
 
   constructor(
-    private obs: Var<T[]>,
+    private signal: Var<T[]>,
     private func: (t: T) => ChildTag) {
     super()
     let paramName = getParamNames(func)[0] || '_'
@@ -21,7 +22,7 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
     let func = this.func
     let anchorBegin = this._anchorBegin
     let anchorEnd = this._anchorEnd
-    let observable = this.obs
+    let observable = this.signal
 
     fragment.appendChild(anchorBegin)
 
@@ -35,7 +36,7 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
       append(fragment, childTag)
     }
     fragment.appendChild(anchorEnd)
-    Obs(observable, (newVal: T[]) => {
+    this.obs = this.obs || Obs(observable, (newVal: T[]) => {
       this.removeChildren()
       let func = this.func
       let fragment = document.createDocumentFragment()
@@ -52,21 +53,22 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
     })
     return fragment
   }
-  removeChildren() {
+
+  private removeChildren() {
     for (let child of this.children) {
-      child.remove()
+      child._remove()
     }
     this.children = []
   }
 
-  remove() {
+  _remove() {
     this.removeChildren()
     let parent = this._anchorBegin.parentNode
     if (parent) {
       parent.removeChild(this._anchorBegin)
       parent.removeChild(this._anchorEnd)
     }
-    dispose(this.obs)
+    this.obs.dispose()
     this._anchorBegin = null
     this._anchorEnd = null
   }
