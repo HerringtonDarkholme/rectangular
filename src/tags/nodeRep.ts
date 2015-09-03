@@ -4,6 +4,7 @@ import Directive from '../directives/directive'
 import EventEmitter from '../eventEmitter'
 
 export type ChildTag = string | Var<string> | NodeRep<Node>
+export type Child<T> = string | Var<string> | T
 
 abstract class NodeRep<T extends Node> extends EventEmitter {
   protected _linkedDirectives: {[a:string]: Directive<{}>} = {}

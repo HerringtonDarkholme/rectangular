@@ -33,9 +33,13 @@ abstract class ElementRep<T extends Element> extends NodeRep<T> {
 }
 
 export
-abstract class VoidElement<T extends HTMLElement> extends ElementRep<T> {
+class VoidElement<T extends HTMLElement> extends ElementRep<T> {
+  constructor(private tagName: string, props: any = {}) {
+    super(props)
+  }
+
   _render(): T {
-    let tagName: string = (<any>this.constructor).__name__
+    let tagName: string = this.tagName
     var elem: T = <T>document.createElement(tagName)
     this.element = elem
     let obj = this.props
@@ -49,13 +53,12 @@ abstract class VoidElement<T extends HTMLElement> extends ElementRep<T> {
 
 export class Tag<T extends HTMLElement> extends ElementRep<T> {
   public children: ChildTag[]
-  constructor(props: any = {}, children: ChildTag[] = []) {
+  constructor(private tagName: string='', props: any = {}, children: ChildTag[] = []) {
     super(props)
     this.children = children
   }
   _render(): T {
-    let tagName: string = (<any>this.constructor).__name__
-    var elem: T = <T>document.createElement(tagName)
+    var elem: T = <T>document.createElement(this.tagName)
     this.element = elem
     let obj = this.props
     for (let key in obj) {

@@ -5,7 +5,7 @@ import {Obs} from '../overkill/index'
 
 class Input extends VoidElement<HTMLInputElement> {
   constructor(props: any) {
-    super(props)
+    super('input', props)
   }
   _render() {
     var elem = document.createElement('input')
