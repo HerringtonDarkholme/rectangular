@@ -45,6 +45,6 @@ mount(For(todos, (t, i) => {
   }, UpdatePolicy.BY_REFERENCE)
   return div({},
     input({type: 'checkbox', click}),
-    div({}, t)
+    t
   )
 }))
