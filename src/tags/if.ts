@@ -1,4 +1,4 @@
-import {Var, Obs, isSignal, dispose} from '../overkill/index'
+import {Var, Obs, isSignal, dispose, ObsImp} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
@@ -6,6 +6,7 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
   private child: NodeRep<N>
   private _anchorBegin: Node
   private _anchorEnd: Node
+  private watcher: ObsImp<{}, {}>
   constructor(
     private obs: Var<boolean>,
     private func: () => NodeRep<N>
@@ -24,7 +25,7 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
     let obs = this.obs
     fragment.appendChild(anchorBegin)
     let bool = obs()
-    Obs(obs, (newVal) => {
+    this.watcher = Obs(obs, (newVal) => {
       if (newVal) {
         this.child = func()
         let parentNode = anchorBegin.parentNode
@@ -51,6 +52,7 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
       parent.removeChild(this._anchorBegin)
       parent.removeChild(this._anchorEnd)
     }
+    this.watcher.dispose()
     this._anchorBegin = null
     this._anchorEnd = null
   }

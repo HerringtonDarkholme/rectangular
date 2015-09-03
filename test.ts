@@ -1,5 +1,5 @@
 import {Component, div, input, p, t, Tag, For, If} from './src/api'
-import {Obs, Var, Rx} from './src/overkill/index'
+import {Obs, Var, Rx, UpdatePolicy} from './src/overkill/index'
 
 class MyComponent extends Component {
   render() {
@@ -38,6 +38,13 @@ var todos = Var(['make', 'install', 'exe'])
 mount(btn)
 mount(change)
 mount(new MyComponent)
-mount(For(todos, (t) => {
-  return div({}, t)
+mount(For(todos, (t, i) => {
+  var click = () => todos((e) => {
+    e.splice(i, 1)
+    return false
+  }, UpdatePolicy.BY_REFERENCE)
+  return div({},
+    input({type: 'checkbox', click}),
+    div({}, t)
+  )
 }))

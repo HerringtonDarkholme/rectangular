@@ -17,6 +17,10 @@ abstract class ElementRep<T extends Element> extends NodeRep<T> {
       directive.bind(this, value)
       return
     }
+    if (value instanceof Directive) {
+      value.bind(this)
+      return
+    }
     if (typeof value === 'string') {
       elem.setAttribute(key, value)
       return

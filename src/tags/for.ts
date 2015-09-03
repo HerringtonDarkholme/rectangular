@@ -10,7 +10,7 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
 
   constructor(
     private signal: Var<T[]>,
-    private func: (t: T) => ChildTag) {
+    private func: (t: T, i: number) => ChildTag) {
     super()
     let paramName = getParamNames(func)[0] || '_'
     let funcName = func['name'] || 'anonymous_func'
@@ -28,8 +28,9 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
 
     let obs: T[] = observable()
 
-    for (let child of obs) {
-      let childTag = func(child)
+    for (let i = 0, l = obs.length; i < l; i++) {
+      let child = obs[i]
+      let childTag = func(child, i)
       if (childTag instanceof NodeRep) {
         this.children.push(childTag)
       }
@@ -42,8 +43,9 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
       let fragment = document.createDocumentFragment()
       var childNode = anchorBegin.nextSibling
       let parentNode = anchorBegin.parentNode
-      for (let t of newVal) {
-        let childTag = func(t)
+      for (let i = 0, l = newVal.length; i < l; i++) {
+        let child = newVal[i]
+        let childTag = func(child, i)
         append(fragment, childTag)
         if (childTag instanceof NodeRep) {
           this.children.push(childTag)
@@ -74,9 +76,9 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
   }
 }
 
-export function For<T>(obs: Var<T[]> , func: (t: T) => ChildTag): NodeRep<DocumentFragment>
-export function For<T>(obs: T[] , func: (t: T) => ChildTag): NodeRep<DocumentFragment>
-export function For<T>(obs: T[] | Var<T[]>, func: (t: T) => ChildTag): NodeRep<DocumentFragment> {
+export function For<T>(obs: Var<T[]> , func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment>
+export function For<T>(obs: T[] , func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment>
+export function For<T>(obs: T[] | Var<T[]>, func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment> {
   if (Array.isArray(obs)) {
     return new ForImpl<T>(Var(obs), func)
   } else {
