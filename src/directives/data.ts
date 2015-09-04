@@ -9,7 +9,6 @@ interface DataDef {
 
 export class Data extends Directive<DataDef> {
   bind<E extends ElementRep<HTMLElement>>(ele: E) {
-    super.bind(ele)
     let data = this.v()
     let element = ele.element
     write(() => {

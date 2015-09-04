@@ -8,7 +8,6 @@ export class Attr<V> extends Directive<V> {
     super(value)
   }
   bind<E extends ElementRep<Element>>(ele: E) {
-    super.bind(ele)
     let key = this.name
     Obs(() => {
       let newValue = this.v().toString()

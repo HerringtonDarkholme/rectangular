@@ -1,6 +1,6 @@
 import {Tag} from './tags/elementRep'
 import {TextRep} from './tags/nodeRep'
-import {Prop} from './directives/prop'
+import Directive, {Prop, Class, Value} from './directives/index'
 import {Var} from './overkill/index'
 
 export {Component} from './tags/component'
@@ -10,8 +10,18 @@ export * from './tags/for'
 export * from './tags/if'
 
 
+const directiveMapping = {
+  value: Value,
+  class: Class,
+}
+
 export function p(name: string[]) {
-  var prop = new Prop(name[0])
+  let diretiveConstructor = directiveMapping[name[0]]
+  if (diretiveConstructor) {
+    let directive = new diretiveConstructor()
+    return directive.toString()
+  }
+  let prop = new Prop(name[0])
   return prop.toString()
 }
 
