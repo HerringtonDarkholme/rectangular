@@ -8,8 +8,9 @@ interface DataDef {
 }
 
 export class Data extends Directive<DataDef> {
-  bind<E extends ElementRep<HTMLElement>>(ele: E, data: DataDef) {
-    super.bind(ele, data)
+  bind<E extends ElementRep<HTMLElement>>(ele: E) {
+    super.bind(ele)
+    let data = this.v()
     let element = ele.element
     write(() => {
       for (let key in Object.keys(data)) {
@@ -18,10 +19,12 @@ export class Data extends Directive<DataDef> {
     })
     Obs(this.v, (newValue, oldValue) => {
       write(() => {
-        for (let key in Object.keys(oldValue)) {
+        for (let key of Object.keys(oldValue)) {
+          if (key in newValue) continue
           element.removeAttribute(`data-${key}`)
         }
-        for (let key in Object.keys(newValue)) {
+        for (let key of Object.keys(newValue)) {
+          if (key in oldValue) continue
           element.setAttribute(`data-${key}`, data[key])
         }
       })

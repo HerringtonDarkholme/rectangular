@@ -76,3 +76,5 @@ export function dispose(f: Function) {
   }
   sig.dispose()
 }
+
+export type Sig<V> = Var<V> | Rx<V, _>

@@ -14,10 +14,13 @@ abstract class ElementRep<T extends Element> extends NodeRep<T> {
   polymorphicBind(elem: T, key: string, value: any) {
     if (key in this._linkedDirectives) {
       let directive = this._linkedDirectives[key]
-      directive.bind(this, value)
+      directive.v(value)
+      this.$directives.push(value)
+      directive.bind(this)
       return
     }
     if (value instanceof Directive) {
+      this.$directives.push(value)
       value.bind(this)
       return
     }

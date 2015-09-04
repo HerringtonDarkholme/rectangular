@@ -1,7 +1,5 @@
 import {Tag} from './elementRep'
-import {TextRep} from './nodeRep'
-import {Prop} from '../directives/prop'
-import {Var} from '../overkill/index'
+import Directive from '../directives/directive'
 
 export class Component extends Tag<HTMLElement> {
   render<T extends HTMLElement>(): Tag<T> {

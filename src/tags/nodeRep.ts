@@ -8,6 +8,7 @@ export type Child<T> = string | Var<string> | T
 
 abstract class NodeRep<T extends Node> extends EventEmitter {
   protected _linkedDirectives: {[a:string]: Directive<{}>} = {}
+  protected $directives: Directive<{}>[] = []
   public element: T
 
   constructor(public props: any = {}) {
@@ -28,9 +29,9 @@ abstract class NodeRep<T extends Node> extends EventEmitter {
     if (element.parentNode) {
       element.parentNode.removeChild(element)
     }
-    let directives= this._linkedDirectives
-    for (let dir in directives) {
-      directives[dir].unbind(this)
+    let directives= this.$directives
+    for (let dir of directives) {
+      dir.unbind(this)
     }
   }
 }

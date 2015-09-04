@@ -12,9 +12,10 @@ function convertObjectToStyle(style: StyleDef): string {
 }
 
 export class Style extends Directive<StyleDef> {
-  bind<E extends ElementRep<HTMLElement>>(ele: E, value: StyleDef) {
-    super.bind(ele, value)
+  bind<E extends ElementRep<HTMLElement>>(ele: E) {
+    super.bind(ele)
     let element = ele.element
+    let value = this.v()
     write(() => {
       element.setAttribute('style', convertObjectToStyle(value))
     })

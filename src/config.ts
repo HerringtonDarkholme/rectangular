@@ -1,7 +1,6 @@
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
 var GLOBAL_ATTRIBUTES = {
   'accesskey': '',
-  'class': '',
   'contenteditable': '',
   'contextmenu': '',
   'dir': '',
@@ -14,8 +13,9 @@ var GLOBAL_ATTRIBUTES = {
   'tabindex': '',
   'title': '',
   'translate': '',
-  'data-*': '',
-  'aria-*': '',
+  'class': <string[]>[],
+  'data': <{[k:string]: string}>{},
+  'aria': <{[k:string]: string}>{},
 }
 
 var EVENT = [
