@@ -49,6 +49,7 @@ class VoidElement<T extends HTMLElement> extends ElementRep<T> {
     for (let key in obj) {
       this.polymorphicBind(elem, key, obj[key])
     }
+    this._linkedDirectives = null
     return elem
   }
 
@@ -71,6 +72,7 @@ export class Tag<T extends HTMLElement> extends ElementRep<T> {
     for (let child of children) {
       append(elem, child)
     }
+    this._linkedDirectives = null
     return elem
   }
 }
