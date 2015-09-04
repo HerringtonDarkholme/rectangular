@@ -7,7 +7,6 @@ function makeId() {
   return Math.random().toString(36).substr(2, 5)
 }
 
-export default Directive
 abstract class Directive<V> {
   private _id = makeId()
   public name: string
@@ -31,3 +30,4 @@ abstract class Directive<V> {
     return this.uniqueId()
   }
 }
+export default Directive

@@ -13,5 +13,6 @@ export class Prop<V> extends Directive<V> {
       let newValue = this.v()
       write(() => ele.element[key] = newValue)
     })
+    ele[key] = this.v
   }
 }

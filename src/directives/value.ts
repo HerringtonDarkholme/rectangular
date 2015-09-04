@@ -5,6 +5,10 @@ import eventManager from '../events/index'
 
 export class Value extends Prop<string> {
   private handler: Function
+  constructor(value?: string) {
+    super('value', value)
+  }
+
   bind<E extends ElementRep<HTMLInputElement>>(ele: E) {
     let directive = this
     let element = ele.element

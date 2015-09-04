@@ -1,6 +1,6 @@
 import {Tag} from './tags/elementRep'
 import {TextRep} from './tags/nodeRep'
-import Directive, {Prop, Class, Value} from './directives/index'
+import {Prop, Class, Value} from './directives/index'
 import {Var} from './overkill/index'
 
 export {Component} from './tags/component'
