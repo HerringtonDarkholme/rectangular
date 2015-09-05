@@ -1,35 +1,31 @@
 import {Tag, VoidElement} from './elementRep'
 import {ChildTag, Child} from './nodeRep'
 import {TagName} from '../decorator'
+import {PROPERTY} from '../config'
 
 function t<E extends HTMLElement>(name: string) {
-  return function(props: any, ...children: ChildTag[]) {
+  return function(props: PROPERTY, ...children: ChildTag[]) {
     return new Tag(name, props, children)
   }
 }
 
 function v<E extends HTMLElement>(name: string) {
-  return function(props: any) {
+  return function(props: PROPERTY) {
     return new VoidElement(name, props)
   }
 }
 
 export var a              = t<HTMLAnchorElement>('c')
 export var abbr           = t<HTMLPhraseElement>('abbr')
-export var acronym        = t<HTMLPhraseElement>('acronym')
 export var address        = t<HTMLBlockElement>('address')
-export var applet         = t<HTMLAppletElement>('applet')
 export var audio          = t<HTMLAudioElement>('audio')
 export var b              = t<HTMLPhraseElement>('b')
-// export var basefont       = t<HTMLBaseFontElement>('basefont')
 export var bdo            = t<HTMLPhraseElement>('bdo')
-export var big            = t<HTMLPhraseElement>('big')
 export var blockquote     = t<HTMLBlockElement>('blockquote')
 export var body           = t<HTMLBodyElement>('body')
 export var button         = t<HTMLButtonElement>('button')
 export var canvas         = t<HTMLCanvasElement>('canvas')
 export var caption        = t<HTMLTableCaptionElement>('caption')
-// export var center         = t<HTMLBlockElement>('center')
 export var cite           = t<HTMLPhraseElement>('cite')
 export var code           = t<HTMLPhraseElement>('code')
 export var colgroup       = t<HTMLTableColElement>('colgroup')
@@ -37,7 +33,6 @@ export var datalist       = t<HTMLDataListElement>('datalist')
 export var dd             = t<HTMLDDElement>('dd')
 export var del            = t<HTMLModElement>('del')
 export var dfn            = t<HTMLPhraseElement>('dfn')
-export var dir            = t<HTMLDirectoryElement>('dir')
 export var div            = t<HTMLDivElement>('div')
 export var dl             = t<HTMLDListElement>('dl')
 export var dt             = t<HTMLDTElement>('dt')
@@ -45,8 +40,6 @@ export var em             = t<HTMLPhraseElement>('em')
 export var fieldset       = t<HTMLFieldSetElement>('fieldset')
 export var font           = t<HTMLFontElement>('font')
 export var form           = t<HTMLFormElement>('form')
-export var frame          = t<HTMLFrameElement>('frame')
-export var frameset       = t<HTMLFrameSetElement>('frameset')
 export var h1             = t<HTMLHeadingElement>('h1')
 export var h2             = t<HTMLHeadingElement>('h2')
 export var h3             = t<HTMLHeadingElement>('h3')
@@ -58,23 +51,17 @@ export var html           = t<HTMLHtmlElement>('html')
 export var i              = t<HTMLPhraseElement>('i')
 export var iframe         = t<HTMLIFrameElement>('iframe')
 export var ins            = t<HTMLModElement>('ins')
-export var isindex        = t<HTMLIsIndexElement>('isindex')
 export var kbd            = t<HTMLPhraseElement>('kbd')
 export var label          = t<HTMLLabelElement>('label')
 export var legend         = t<HTMLLegendElement>('legend')
 export var li             = t<HTMLLIElement>('li')
-export var listing        = t<HTMLBlockElement>('listing')
 export var map            = t<HTMLMapElement>('map')
-export var marquee        = t<HTMLMarqueeElement>('marquee')
 export var menu           = t<HTMLMenuElement>('menu')
-export var nextid         = t<HTMLNextIdElement>('nextid')
-export var nobr           = t<HTMLPhraseElement>('nobr')
 export var object         = t<HTMLObjectElement>('object')
 export var ol             = t<HTMLOListElement>('ol')
 export var optgroup       = t<HTMLOptGroupElement>('optgroup')
 export var option         = t<HTMLOptionElement>('option')
 export var p              = t<HTMLParagraphElement>('p')
-export var plaintext      = t<HTMLBlockElement>('plaintext')
 export var pre            = t<HTMLPreElement>('pre')
 export var progress       = t<HTMLProgressElement>('progress')
 export var q              = t<HTMLQuoteElement>('q')
@@ -86,7 +73,6 @@ export var script         = t<HTMLScriptElement>('script')
 export var select         = t<HTMLSelectElement>('select')
 export var small          = t<HTMLPhraseElement>('small')
 export var span           = t<HTMLSpanElement>('span')
-export var strike         = t<HTMLPhraseElement>('strike')
 export var strong         = t<HTMLPhraseElement>('strong')
 export var style          = t<HTMLStyleElement>('style')
 export var sub            = t<HTMLPhraseElement>('sub')
@@ -100,11 +86,9 @@ export var th             = t<HTMLTableHeaderCellElement>('th')
 export var thead          = t<HTMLTableSectionElement>('thead')
 export var title          = t<HTMLTitleElement>('title')
 export var tr             = t<HTMLTableRowElement>('tr')
-export var tt             = t<HTMLPhraseElement>('tt')
 export var u              = t<HTMLPhraseElement>('u')
 export var ul             = t<HTMLUListElement>('ul')
 export var video          = t<HTMLVideoElement>('video')
-export var xmp            = t<HTMLBlockElement>('xmp')
 
 // void element
 export var area           = v<HTMLAreaElement>('area')

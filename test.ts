@@ -1,5 +1,5 @@
-import {Component, div, input, p, t, Tag, For, If} from './src/api'
-import {div, input, label} from './src/api'
+import {Component, p, Tag, For, If} from './src/api'
+import {div, input, label} from './src/tags/index'
 import {Obs, Var, Rx, UpdatePolicy} from './src/overkill/index'
 
 class MyComponent extends Component {
@@ -31,11 +31,11 @@ function mount(elem) {
 var btnText
 
 var btn = div({class: 'btn btn-lg', click() {alert('button clicked!')}, [p`prop`]: 123},
-  btnText = t`test`
+  btnText = Var('test')
 );
 
 
-var change = div({class: 'btn', click() {btnText(Math.random())}}, 'change text');
+var change = div({class: 'btn', click(e) {btnText(Math.random())}}, 'change text');
 var todos = Var(['make', 'install', 'exe'])
 mount(btn)
 mount(change)
