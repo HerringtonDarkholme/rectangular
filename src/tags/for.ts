@@ -1,4 +1,4 @@
-import {Var, Obs, isSignal, ObsImp} from '../overkill/index'
+import {Var, Sig, Obs, isSignal, ObsImp} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
@@ -9,7 +9,7 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
   private obs: ObsImp<T[], {}>
 
   constructor(
-    private signal: Var<T[]>,
+    private signal: Sig<T[]>,
     private func: (t: T, i: number) => ChildTag) {
     super()
     let paramName = getParamNames(func)[0] || '_'
@@ -76,9 +76,9 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
   }
 }
 
-export function For<T>(obs: Var<T[]> , func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment>
+export function For<T>(obs: Sig<T[]> , func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment>
 export function For<T>(obs: T[] , func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment>
-export function For<T>(obs: T[] | Var<T[]>, func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment> {
+export function For<T>(obs: T[] | Sig<T[]>, func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment> {
   if (Array.isArray(obs)) {
     return new ForImpl<T>(Var(obs), func)
   } else {

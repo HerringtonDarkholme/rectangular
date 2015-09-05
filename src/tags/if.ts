@@ -1,4 +1,4 @@
-import {Var, Obs, isSignal, dispose, ObsImp} from '../overkill/index'
+import {Sig, Var, Obs, isSignal, dispose, ObsImp} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
@@ -8,7 +8,7 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
   private _anchorEnd: Node
   private watcher: ObsImp<{}, {}>
   constructor(
-    private obs: Var<boolean>,
+    private obs: Sig<boolean>,
     private func: () => NodeRep<N>
   ) {
     super()
@@ -60,8 +60,8 @@ class IfImpl<N extends Node> extends NodeRep<DocumentFragment> {
 
 type FragRep = NodeRep<DocumentFragment>
 export function If<N extends Node>(obs: boolean, func: () => NodeRep<N>): FragRep
-export function If<N extends Node>(obs: Var<boolean>, func: () => NodeRep<N>): FragRep
-export function If<N extends Node>(obs: boolean | Var<boolean>, func: () => NodeRep<N>): FragRep {
+export function If<N extends Node>(obs: Sig<boolean>, func: () => NodeRep<N>): FragRep
+export function If<N extends Node>(obs: boolean | Sig<boolean>, func: () => NodeRep<N>): FragRep {
   if (typeof obs === 'boolean') {
     return new IfImpl<N>(Var(obs), func)
   } else {
