@@ -27,10 +27,10 @@ export class Tag<T extends HTMLElement> extends NodeRep<T> {
     return elem
   }
 
-  polymorphicBind(elem: T, key: string, value: string): void
-  polymorphicBind(elem: T, key: string, value: Function): void
-  polymorphicBind(elem: T, key: string, value: Directive<{}>): void
-  polymorphicBind(elem: T, key: string, value: any) {
+  private polymorphicBind(elem: T, key: string, value: string): void
+  private polymorphicBind(elem: T, key: string, value: Function): void
+  private polymorphicBind(elem: T, key: string, value: Directive<{}>): void
+  private polymorphicBind(elem: T, key: string, value: any) {
     if (key in this._linkedDirectives) {
       let directive = this._linkedDirectives[key]
       directive.v(value)
