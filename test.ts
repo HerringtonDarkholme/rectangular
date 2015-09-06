@@ -36,12 +36,12 @@ var btn = div({class: 'btn btn-lg', click() {alert('button clicked!')}, [p`prop`
   btnText = Var('test')
 );
 
-// mount(ul({},
-//   li({}, '123'),
-//   li({}, '123'),
-//   li({}, '123'),
-//   For([1,2,3,4], (v) => li({}, ''+v))
-// ))
+mount(ul({},
+  li({}, '123'),
+  li({}, '123'),
+  li({}, '123'),
+  For([1,2,3,4], (v) => li({}, ''+v))
+))
 
 var change = div({class: 'btn', click(e) {btnText(Math.random())}}, 'change text');
 var todos = Var(['make', 'install', 'exe'])

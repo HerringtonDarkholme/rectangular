@@ -2,8 +2,8 @@ import {Var, Sig, Obs, isSignal, ObsImp} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
-export class ForImpl<T, E extends NodeRep<Node>> extends NodeRep<DocumentFragment> {
-  private children: E[] = []
+export class ForImpl<T, E extends ChildTag> extends NodeRep<DocumentFragment> {
+  private children: NodeRep<Node>[] = []
   private _anchorBegin: Node
   private _anchorEnd: Node
   private obs: ObsImp<T[], {}>
@@ -32,7 +32,7 @@ export class ForImpl<T, E extends NodeRep<Node>> extends NodeRep<DocumentFragmen
       let child = obs[i]
       let childTag = func(child, i)
       if (childTag instanceof NodeRep) {
-        this.children.push(childTag)
+        this.children.push(childTag as any)
       }
       append(fragment, childTag)
     }
@@ -48,7 +48,7 @@ export class ForImpl<T, E extends NodeRep<Node>> extends NodeRep<DocumentFragmen
         let childTag = func(child, i)
         append(fragment, childTag)
         if (childTag instanceof NodeRep) {
-          this.children.push(childTag)
+          this.children.push(<any>childTag)
         }
       }
       parentNode.insertBefore(fragment, anchorEnd)
@@ -76,9 +76,9 @@ export class ForImpl<T, E extends NodeRep<Node>> extends NodeRep<DocumentFragmen
   }
 }
 
-export function For<T, E extends NodeRep<Node>>(obs: Sig<T[]> , func: (t: T, i: number) => E): ForImpl<T, E>
-export function For<T, E extends NodeRep<Node>>(obs: T[] , func: (t: T, i: number) => E): ForImpl<T, E>
-export function For<T, E extends NodeRep<Node>>(obs: T[] | Sig<T[]>, func: (t: T, i: number) => E): ForImpl<T, E> {
+export function For<T, E extends ChildTag>(obs: Sig<T[]> , func: (t: T, i: number) => E): ForImpl<T, E>
+export function For<T, E extends ChildTag>(obs: T[] , func: (t: T, i: number) => E): ForImpl<T, E>
+export function For<T, E extends ChildTag>(obs: T[] | Sig<T[]>, func: (t: T, i: number) => E): ForImpl<T, E> {
   if (Array.isArray(obs)) {
     return new ForImpl<T, E>(Var(obs), func)
   } else {
