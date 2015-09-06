@@ -6,8 +6,27 @@ import {write} from '../render'
 import {append} from './util'
 import eventManager from '../events/index'
 
-export
-abstract class ElementRep<T extends Element> extends NodeRep<T> {
+export class Tag<T extends HTMLElement> extends NodeRep<T> {
+  public children: ChildTag[]
+  constructor(private tagName: string='', props: any = {}, children: ChildTag[] = []) {
+    super(props)
+    this.children = children
+  }
+  _render(): T {
+    var elem: T = <T>document.createElement(this.tagName)
+    this.element = elem
+    let obj = this.props
+    for (let key in obj) {
+      this.polymorphicBind(elem, key, obj[key])
+    }
+    let children = this.children
+    for (let child of children) {
+      append(elem, child)
+    }
+    this._linkedDirectives = null
+    return elem
+  }
+
   polymorphicBind(elem: T, key: string, value: string): void
   polymorphicBind(elem: T, key: string, value: Function): void
   polymorphicBind(elem: T, key: string, value: Directive<{}>): void
@@ -32,27 +51,5 @@ abstract class ElementRep<T extends Element> extends NodeRep<T> {
       eventManager.on(elem, key, value)
       return
     }
-  }
-}
-
-export class Tag<T extends HTMLElement> extends ElementRep<T> {
-  public children: ChildTag[]
-  constructor(private tagName: string='', props: any = {}, children: ChildTag[] = []) {
-    super(props)
-    this.children = children
-  }
-  _render(): T {
-    var elem: T = <T>document.createElement(this.tagName)
-    this.element = elem
-    let obj = this.props
-    for (let key in obj) {
-      this.polymorphicBind(elem, key, obj[key])
-    }
-    let children = this.children
-    for (let child of children) {
-      append(elem, child)
-    }
-    this._linkedDirectives = null
-    return elem
   }
 }

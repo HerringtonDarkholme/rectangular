@@ -1,5 +1,5 @@
 import {Prop} from './prop'
-import {ElementRep} from '../tags/elementRep'
+import {Tag} from '../tags/elementRep'
 import {Obs} from '../overkill/index'
 import eventManager from '../events/index'
 
@@ -9,7 +9,7 @@ export class Value extends Prop<string> {
     super('value', value)
   }
 
-  bind<E extends ElementRep<HTMLInputElement>>(ele: E) {
+  bind<E extends Tag<HTMLInputElement>>(ele: E) {
     let directive = this
     let element = ele.element
     if (!(element instanceof HTMLInputElement)) return
@@ -19,7 +19,7 @@ export class Value extends Prop<string> {
     }
     eventManager.on(element, 'keyup', this.handler)
   }
-  unbind<E extends ElementRep<HTMLInputElement>>(ele: E) {
+  unbind<E extends Tag<HTMLInputElement>>(ele: E) {
     super.unbind(ele)
     eventManager.off(ele.element, 'keyup', this.handler)
   }
