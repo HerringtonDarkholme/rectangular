@@ -368,9 +368,9 @@ export type INPUT = {
   width?: number,
 }
 
-type INS = DEL
+export type INS = DEL
 
-type KEYGEN = {
+export type KEYGEN = {
   autofocus?: boolean,
   challenge?: string,
   disabled?: boolean,
@@ -379,12 +379,12 @@ type KEYGEN = {
   name?: string,
 }
 
-type LABEL = {
+export type LABEL = {
   for?: string,
   form?: string,
 }
 
-type LINK = {
+export type LINK = {
   crossorigin?: string,
   disabled?: boolean,
   href?: string,
@@ -396,17 +396,17 @@ type LINK = {
   integrity?: string,
 }
 
-type MAP = {
+export type MAP = {
   name?: string,
   id: string,
 }
 
-type MENU = {
+export type MENU = {
   label?: string,
   type?: string,
 }
 
-type MENUITEM = {
+export type MENUITEM = {
   checked?: boolean,
   default?: boolean,
   disabled?: boolean,
@@ -417,13 +417,13 @@ type MENUITEM = {
   type?: string,
 }
 
-type META = {
+export type META = {
   content: string,
   'http-equiv'?: string,
   name?: string,
 }
 
-type METER = {
+export type METER = {
   form?: string,
   high?: number,
   low?: number,
@@ -433,7 +433,7 @@ type METER = {
   value: number,
 }
 
-type OBJECT = {
+export type OBJECT = {
   data?: string,
   form?: string,
   height?: number,
@@ -444,49 +444,49 @@ type OBJECT = {
   typemustmatch?: boolean,
 }
 
-type OL = {
+export type OL = {
   reversed?: boolean,
   start?: string,
   type?: string,
 }
 
-type OPTGROUP = {
+export type OPTGROUP = {
   label: string,
   disabled?: boolean,
 }
 
-type OPTION = {
+export type OPTION = {
   disabled?: boolean,
   label?: string,
   value?: string,
   selected?: boolean,
 }
 
-type OUTPUT = {
+export type OUTPUT = {
   for?: string,
   form?: string,
   name?: string,
 }
 
-type PARAM = {
+export type PARAM = {
   name?: string,
   value?: string,
 }
 
-type PRE = {
+export type PRE = {
   width?: number
 }
 
-type PROGRESS = {
+export type PROGRESS = {
   max?: number,
   value?: number,
 }
 
-type Q = {
+export type Q = {
   cite?: string
 }
 
-type SCRIPT = {
+export type SCRIPT = {
   async?: boolean,
   src?: string,
   type?: string,
@@ -496,9 +496,9 @@ type SCRIPT = {
   integrity?: string,
 }
 
-type SECTION = BLOCKQUOTE
+export type SECTION = BLOCKQUOTE
 
-type SELECT = {
+export type SELECT = {
   autofocus?: boolean,
   disabled?: boolean,
   form?: string,
@@ -508,13 +508,13 @@ type SELECT = {
   size?: number,
 }
 
-type SOURCE = {
+export type SOURCE = {
   media?: string,
   src?: string,
   type?: string | number
 }
 
-type STYLE = {
+export type STYLE = {
   type?: string,
   media?: string,
   scoped?: boolean,
@@ -522,13 +522,13 @@ type STYLE = {
   disabled?: boolean,
 }
 
-type TD = {
+export type TD = {
   colspan?: number,
   headers?: string,
   rowspan?: number,
 }
 
-type TEXTAREA = {
+export type TEXTAREA = {
   autofocus?: boolean,
   cols?: number,
   disabled?: boolean,
@@ -542,19 +542,19 @@ type TEXTAREA = {
   wrap?: string,
 }
 
-type TH = {
+export type TH = {
   colspan?: number,
   headers?: string,
   rowspan?: number,
   scope?: string
 }
 
-type TIME = {
+export type TIME = {
   datetime?: string,
   pubdate?: string,
 }
 
-type TRACK = {
+export type TRACK = {
   default?: boolean,
   kind?: string,
   label?: string,
@@ -562,7 +562,7 @@ type TRACK = {
   srclang?: string
 }
 
-type VIDEO = {
+export type VIDEO = {
   autoplay?: boolean,
   buffered?: boolean,
   controls?: boolean,

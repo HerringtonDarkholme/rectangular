@@ -35,26 +35,6 @@ abstract class ElementRep<T extends Element> extends NodeRep<T> {
   }
 }
 
-export
-class VoidElement<T extends HTMLElement> extends ElementRep<T> {
-  constructor(private tagName: string, props: any = {}) {
-    super(props)
-  }
-
-  _render(): T {
-    let tagName: string = this.tagName
-    var elem: T = <T>document.createElement(tagName)
-    this.element = elem
-    let obj = this.props
-    for (let key in obj) {
-      this.polymorphicBind(elem, key, obj[key])
-    }
-    this._linkedDirectives = null
-    return elem
-  }
-
-}
-
 export class Tag<T extends HTMLElement> extends ElementRep<T> {
   public children: ChildTag[]
   constructor(private tagName: string='', props: any = {}, children: ChildTag[] = []) {
