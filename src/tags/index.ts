@@ -1,5 +1,6 @@
 import {Tag} from './elementRep'
 import {ChildTag, Child} from './nodeRep'
+import {Sig} from '../overkill/index'
 import {TagName} from '../decorator'
 import {PROPERTY} from '../config'
 import * as T from '../config'
@@ -13,85 +14,104 @@ function t<E extends HTMLElement>(name: string) {
 var v: <E extends HTMLElement>(n: string) => (p: PROPERTY) => Tag<E> = t
 var tp: <E extends HTMLElement, T>(n: string) => (p: PROPERTY & T, ...c: ChildTag[]) => Tag<E> = t
 var vp: <E extends HTMLElement, T>(n: string) => (p: PROPERTY & T) => Tag<E> = t
+var tc: <E extends HTMLElement, C>(n: string) => (p: PROPERTY, ...c: C[]) => Tag<E> = t
+var tpc: <E extends HTMLElement, P, C>(n: string) => (p: PROPERTY&P, ...c: C[]) => Tag<E> = t
+var ph: (n: string) => (p: PROPERTY, ...c: PHRASE[]) => Tag<HTMLPhraseElement> = t
+
+type PHRASE = string | Sig<string> | Tag<HTMLPhraseElement | HTMLAudioElement | HTMLButtonElement | HTMLCanvasElement | HTMLDataListElement | HTMLEmbedElement | HTMLIFrameElement | HTMLImageElement | HTMLInputElement | HTMLLabelElement | HTMLMeterElement | HTMLObjectElement | HTMLProgressElement | HTMLQuoteElement | HTMLScriptElement | HTMLSelectElement | HTMLTextAreaElement | HTMLTimeElement | HTMLVideoElement | HTMLAnchorElement | HTMLAreaElement | HTMLLinkElement | HTMLMapElement>
+
+type METADATA =
+  Tag<HTMLBaseElement | HTMLTitleElement | HTMLMetaElement | HTMLLinkElement | HTMLScriptElement | HTMLStyleElement>
+
+type TABLE_CHILD = Tag<HTMLTableCaptionElement|HTMLTableColElement|HTMLTableSectionElement|HTMLTableRowElement>
 
 export var a              = tp<HTMLAnchorElement, T.A>('c')
-export var abbr           = t<HTMLPhraseElement>('abbr')
+export var abbr           = ph('abbr')
 export var address        = t<HTMLBlockElement>('address')
+export var article        = t<HTMLElement>('article')
+export var aside          = t<HTMLElement>('aside')
 export var audio          = tp<HTMLAudioElement, T.AUDIO>('audio')
-export var b              = t<HTMLPhraseElement>('b')
-export var bdo            = t<HTMLPhraseElement>('bdo')
+export var b              = ph('b')
+export var bdo            = ph('bdo')
 export var blockquote     = tp<HTMLBlockElement, T.BLOCKQUOTE>('blockquote')
 export var body           = t<HTMLBodyElement>('body')
-export var button         = tp<HTMLButtonElement, T.BUTTON>('button')
+export var button         = tpc<HTMLButtonElement, T.BUTTON, PHRASE>('button')
 export var canvas         = tp<HTMLCanvasElement, T.CANVAS>('canvas')
-export var caption        = t<HTMLTableCaptionElement>('caption')
-export var cite           = t<HTMLPhraseElement>('cite')
-export var code           = t<HTMLPhraseElement>('code')
-export var colgroup       = tp<HTMLTableColElement, T.COLGROUP>('colgroup')
-export var datalist       = t<HTMLDataListElement>('datalist')
+export var caption        = tc<HTMLTableCaptionElement, PHRASE>('caption')
+export var cite           = ph('cite')
+export var code           = ph('code')
+export var colgroup       = tpc<HTMLTableColElement, T.COLGROUP, Tag<HTMLTableColElement>>('colgroup')
+export var datalist       = tc<HTMLDataListElement, Tag<HTMLOptionElement>>('datalist')
 export var dd             = t<HTMLDDElement>('dd')
 export var del            = tp<HTMLModElement, T.DEL>('del')
 export var details: (p: PROPERTY&T.DETAILS, s: Tag<HTMLSummaryElement>, ...c: ChildTag[]) => Tag<HTMLDetailsElement>
                           = tp<HTMLDetailsElement, T.DETAILS>('details')
-export var dialog         = tp<HTMLDialogElement, T.DIALOG>('dialog')
-export var dfn            = t<HTMLPhraseElement>('dfn')
+export var dialog         = tpc<HTMLDialogElement, T.DIALOG, Tag<HTMLDTElement|HTMLDDElement>>('dialog')
+export var dfn            = ph('dfn')
 export var div            = t<HTMLDivElement>('div')
 export var dl             = t<HTMLDListElement>('dl')
-export var dt             = t<HTMLDTElement>('dt')
-export var em             = t<HTMLPhraseElement>('em')
+export var dt             = tc<HTMLDTElement, PHRASE>('dt')
+export var em             = ph('em')
 export var fieldset       = tp<HTMLFieldSetElement, T.FIELDSET>('fieldset')
-export var font           = t<HTMLFontElement>('font')
+export var figure         = t<HTMLElement>('figure')
+// export var font           = t<HTMLFontElement>('font')
+export var footer         = t<HTMLElement>('footer')
 export var form           = tp<HTMLFormElement, T.FORM>('form')
-export var h1             = t<HTMLHeadingElement>('h1')
-export var h2             = t<HTMLHeadingElement>('h2')
-export var h3             = t<HTMLHeadingElement>('h3')
-export var h4             = t<HTMLHeadingElement>('h4')
-export var h5             = t<HTMLHeadingElement>('h5')
-export var h6             = t<HTMLHeadingElement>('h6')
-export var head           = t<HTMLHeadElement>('head')
-export var html           = tp<HTMLHtmlElement, T.HTML>('html')
-export var i              = t<HTMLPhraseElement>('i')
+export var h1             = tc<HTMLHeadingElement, PHRASE>('h1')
+export var h2             = tc<HTMLHeadingElement, PHRASE>('h2')
+export var h3             = tc<HTMLHeadingElement, PHRASE>('h3')
+export var h4             = tc<HTMLHeadingElement, PHRASE>('h4')
+export var h5             = tc<HTMLHeadingElement, PHRASE>('h5')
+export var h6             = tc<HTMLHeadingElement, PHRASE>('h6')
+export var head           = tc<HTMLHeadElement, METADATA>('head')
+export var header         = t<HTMLElement>('header')
+export var html: (p: PROPERTY&T.HTML, h: Tag<HTMLHeadElement>, b: Tag<HTMLBodyElement>) => Tag<HTMLElement>
+                          = t('html')
+export var i              = ph('i')
 export var iframe         = tp<HTMLIFrameElement, T.IFRAME>('iframe')
 export var ins            = tp<HTMLModElement, T.INS>('ins')
-export var kbd            = t<HTMLPhraseElement>('kbd')
-export var label          = tp<HTMLLabelElement, T.LABEL>('label')
-export var legend         = t<HTMLLegendElement>('legend')
+export var kbd            = ph('kbd')
+export var label          = tpc<HTMLLabelElement, T.LABEL, PHRASE>('label')
+export var legend         = tc<HTMLLegendElement, PHRASE>('legend')
 export var li             = t<HTMLLIElement>('li')
 export var map            = tp<HTMLMapElement, T.MAP>('map')
 export var menu           = tp<HTMLMenuElement, T.MENU>('menu')
+export var meter          = tpc<HTMLMeterElement, T.METER, PHRASE>('meter')
+export var nav            = t<HTMLElement>('nav')
 export var object         = tp<HTMLObjectElement, T.OBJECT>('object')
-export var ol             = tp<HTMLOListElement, T.OL>('ol')
-export var optgroup       = tp<HTMLOptGroupElement, T.OPTGROUP>('optgroup')
-export var option         = tp<HTMLOptionElement, T.OPTION>('option')
-export var p              = t<HTMLParagraphElement>('p')
-export var pre            = tp<HTMLPreElement, T.PRE>('pre')
-export var progress       = tp<HTMLProgressElement, T.PROGRESS>('progress')
-export var q              = tp<HTMLQuoteElement, T.Q>('q')
-export var rt             = t<HTMLPhraseElement>('rt')
-export var ruby           = t<HTMLPhraseElement>('ruby')
+export var ol             = tpc<HTMLOListElement, T.OL, Tag<HTMLLIElement>>('ol')
+export var optgroup       = tpc<HTMLOptGroupElement, T.OPTGROUP, Tag<HTMLOptionElement>>('optgroup')
+export var option         = tpc<HTMLOptionElement, T.OPTION, string|Sig<string>>('option')
+export var p              = tc<HTMLParagraphElement, PHRASE>('p')
+export var pre            = tpc<HTMLPreElement, T.PRE, PHRASE>('pre')
+export var progress       = tpc<HTMLProgressElement, T.PROGRESS, PHRASE>('progress')
+export var q              = tpc<HTMLQuoteElement, T.Q, PHRASE>('q')
+export var rp             = ph('rp')
+export var rt             = ph('rt')
+export var ruby           = ph('ruby')
 export var s              = t<HTMLPhraseElement>('s')
-export var samp           = t<HTMLPhraseElement>('samp')
+export var samp           = ph('samp')
 export var script         = tp<HTMLScriptElement, T.SCRIPT>('script')
 export var section        = tp<HTMLElement, T.SECTION>('section')
-export var select         = tp<HTMLSelectElement, T.SELECT>('select')
-export var small          = t<HTMLPhraseElement>('small')
-export var span           = t<HTMLSpanElement>('span')
-export var strong         = t<HTMLPhraseElement>('strong')
+export var select         = tpc<HTMLSelectElement, T.SELECT, Tag<HTMLOptGroupElement|HTMLOptionElement>>('select')
+export var small          = ph('small')
+export var span           = tc<HTMLSpanElement, PHRASE>('span')
+export var strong         = ph('strong')
 export var style          = tp<HTMLStyleElement, T.STYLE>('style')
-export var sub            = t<HTMLPhraseElement>('sub')
-export var sup            = t<HTMLPhraseElement>('sup')
-export var table          = t<HTMLTableElement>('table')
-export var tbody          = t<HTMLTableSectionElement>('tbody')
+export var sub            = ph('sub')
+export var sup            = ph('sup')
+export var table          = tc<HTMLTableElement, TABLE_CHILD>('table')
+export var tbody          = tc<HTMLTableSectionElement, Tag<HTMLTableRowElement>>('tbody')
 export var td             = tp<HTMLTableDataCellElement, T.TD>('td')
-export var time           = tp<HTMLTimeElement, T.TIME>('time')
-export var textarea       = tp<HTMLTextAreaElement, T.TEXTAREA>('textarea')
-export var tfoot          = t<HTMLTableSectionElement>('tfoot')
+export var time           = tpc<HTMLTimeElement, T.TIME, PHRASE>('time')
+export var textarea       = tpc<HTMLTextAreaElement, T.TEXTAREA, string|Sig<string>>('textarea')
+export var tfoot          = tc<HTMLTableSectionElement, Tag<HTMLTableRowElement>>('tfoot')
 export var th             = tp<HTMLTableHeaderCellElement, T.TH>('th')
-export var thead          = t<HTMLTableSectionElement>('thead')
+export var thead          = tc<HTMLTableSectionElement, Tag<HTMLTableRowElement>>('thead')
 export var title          = t<HTMLTitleElement>('title')
-export var tr             = t<HTMLTableRowElement>('tr')
+export var tr             = tc<HTMLTableRowElement, Tag<HTMLTableDataCellElement|HTMLTableHeaderCellElement>>('tr')
 export var u              = t<HTMLPhraseElement>('u')
-export var ul             = t<HTMLUListElement>('ul')
+export var ul             = tc<HTMLUListElement, HTMLLIElement>('ul')
 export var video          = tp<HTMLVideoElement, T.VIDEO>('video')
 
 // void element
@@ -130,4 +150,13 @@ interface HTMLMenuItemElement extends HTMLElement {
 
 interface HTMLTimeElement extends HTMLElement {
   dateTime: string
+}
+
+interface HTMLMeterElement extends HTMLElement {
+  value: number
+  min: number
+  low: number
+  high: number
+  max: number
+  optimum: number
 }
