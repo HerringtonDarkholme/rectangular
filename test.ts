@@ -2,6 +2,8 @@ import {Component, p, Tag, For, If} from './src/api'
 import {div, input, label} from './src/tags/index'
 import {Obs, Var, Rx, UpdatePolicy} from './src/overkill/index'
 
+import {ul, li} from './src/tags/index'
+
 class MyComponent extends Component {
   render() {
     var inp = input({class: 'heheh', [p`value`]: '123', keydown(e) {e.which === 13 && submit()}})
@@ -34,6 +36,12 @@ var btn = div({class: 'btn btn-lg', click() {alert('button clicked!')}, [p`prop`
   btnText = Var('test')
 );
 
+// mount(ul({},
+//   li({}, '123'),
+//   li({}, '123'),
+//   li({}, '123'),
+//   For([1,2,3,4], (v) => li({}, ''+v))
+// ))
 
 var change = div({class: 'btn', click(e) {btnText(Math.random())}}, 'change text');
 var todos = Var(['make', 'install', 'exe'])

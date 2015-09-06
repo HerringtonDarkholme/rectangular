@@ -2,15 +2,15 @@ import {Var, Sig, Obs, isSignal, ObsImp} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
-class ForImpl<T> extends NodeRep<DocumentFragment> {
-  private children: NodeRep<Node>[] = []
+export class ForImpl<T, E extends NodeRep<Node>> extends NodeRep<DocumentFragment> {
+  private children: E[] = []
   private _anchorBegin: Node
   private _anchorEnd: Node
   private obs: ObsImp<T[], {}>
 
   constructor(
     private signal: Sig<T[]>,
-    private func: (t: T, i: number) => ChildTag) {
+    private func: (t: T, i: number) => E) {
     super()
     let paramName = getParamNames(func)[0] || '_'
     let funcName = func['name'] || 'anonymous_func'
@@ -76,12 +76,12 @@ class ForImpl<T> extends NodeRep<DocumentFragment> {
   }
 }
 
-export function For<T>(obs: Sig<T[]> , func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment>
-export function For<T>(obs: T[] , func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment>
-export function For<T>(obs: T[] | Sig<T[]>, func: (t: T, i: number) => ChildTag): NodeRep<DocumentFragment> {
+export function For<T, E extends NodeRep<Node>>(obs: Sig<T[]> , func: (t: T, i: number) => E): ForImpl<T, E>
+export function For<T, E extends NodeRep<Node>>(obs: T[] , func: (t: T, i: number) => E): ForImpl<T, E>
+export function For<T, E extends NodeRep<Node>>(obs: T[] | Sig<T[]>, func: (t: T, i: number) => E): ForImpl<T, E> {
   if (Array.isArray(obs)) {
-    return new ForImpl<T>(Var(obs), func)
+    return new ForImpl<T, E>(Var(obs), func)
   } else {
-    return new ForImpl<T>(obs, func)
+    return new ForImpl<T, E>(obs, func)
   }
 }

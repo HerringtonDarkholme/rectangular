@@ -4,6 +4,9 @@ import {Sig} from '../overkill/index'
 import {TagName} from '../decorator'
 import {PROPERTY} from '../config'
 import * as T from '../config'
+import {ForImpl} from './for'
+
+type T<E extends HTMLElement> = Tag<E> | ForImpl<{}, Tag<E>>
 
 function t<E extends HTMLElement>(name: string) {
   return function(props: PROPERTY, ...children: ChildTag[]) {
@@ -18,12 +21,12 @@ var tc: <E extends HTMLElement, C>(n: string) => (p: PROPERTY, ...c: C[]) => Tag
 var tpc: <E extends HTMLElement, P, C>(n: string) => (p: PROPERTY&P, ...c: C[]) => Tag<E> = t
 var ph: (n: string) => (p: PROPERTY, ...c: PHRASE[]) => Tag<HTMLPhraseElement> = t
 
-type PHRASE = string | Sig<string> | Tag<HTMLPhraseElement | HTMLAudioElement | HTMLButtonElement | HTMLCanvasElement | HTMLDataListElement | HTMLEmbedElement | HTMLIFrameElement | HTMLImageElement | HTMLInputElement | HTMLLabelElement | HTMLMeterElement | HTMLObjectElement | HTMLProgressElement | HTMLQuoteElement | HTMLScriptElement | HTMLSelectElement | HTMLTextAreaElement | HTMLTimeElement | HTMLVideoElement | HTMLAnchorElement | HTMLAreaElement | HTMLLinkElement | HTMLMapElement>
+type PHRASE = string | Sig<string> | T<HTMLPhraseElement | HTMLAudioElement | HTMLButtonElement | HTMLCanvasElement | HTMLDataListElement | HTMLEmbedElement | HTMLIFrameElement | HTMLImageElement | HTMLInputElement | HTMLLabelElement | HTMLMeterElement | HTMLObjectElement | HTMLProgressElement | HTMLQuoteElement | HTMLScriptElement | HTMLSelectElement | HTMLTextAreaElement | HTMLTimeElement | HTMLVideoElement | HTMLAnchorElement | HTMLAreaElement | HTMLLinkElement | HTMLMapElement>
 
 type METADATA =
-  Tag<HTMLBaseElement | HTMLTitleElement | HTMLMetaElement | HTMLLinkElement | HTMLScriptElement | HTMLStyleElement>
+  T<HTMLBaseElement | HTMLTitleElement | HTMLMetaElement | HTMLLinkElement | HTMLScriptElement | HTMLStyleElement>
 
-type TABLE_CHILD = Tag<HTMLTableCaptionElement|HTMLTableColElement|HTMLTableSectionElement|HTMLTableRowElement>
+type TABLE_CHILD = T<HTMLTableCaptionElement|HTMLTableColElement|HTMLTableSectionElement|HTMLTableRowElement>
 
 export var a              = tp<HTMLAnchorElement, T.A>('c')
 export var abbr           = ph('abbr')
@@ -40,13 +43,13 @@ export var canvas         = tp<HTMLCanvasElement, T.CANVAS>('canvas')
 export var caption        = tc<HTMLTableCaptionElement, PHRASE>('caption')
 export var cite           = ph('cite')
 export var code           = ph('code')
-export var colgroup       = tpc<HTMLTableColElement, T.COLGROUP, Tag<HTMLTableColElement>>('colgroup')
-export var datalist       = tc<HTMLDataListElement, Tag<HTMLOptionElement>>('datalist')
+export var colgroup       = tpc<HTMLTableColElement, T.COLGROUP, T<HTMLTableColElement>>('colgroup')
+export var datalist       = tc<HTMLDataListElement, T<HTMLOptionElement>>('datalist')
 export var dd             = t<HTMLDDElement>('dd')
 export var del            = tp<HTMLModElement, T.DEL>('del')
-export var details: (p: PROPERTY&T.DETAILS, s: Tag<HTMLSummaryElement>, ...c: ChildTag[]) => Tag<HTMLDetailsElement>
+export var details: (p: PROPERTY&T.DETAILS, s: T<HTMLSummaryElement>, ...c: ChildTag[]) => Tag<HTMLDetailsElement>
                           = tp<HTMLDetailsElement, T.DETAILS>('details')
-export var dialog         = tpc<HTMLDialogElement, T.DIALOG, Tag<HTMLDTElement|HTMLDDElement>>('dialog')
+export var dialog         = tpc<HTMLDialogElement, T.DIALOG, T<HTMLDTElement|HTMLDDElement>>('dialog')
 export var dfn            = ph('dfn')
 export var div            = t<HTMLDivElement>('div')
 export var dl             = t<HTMLDListElement>('dl')
@@ -65,7 +68,7 @@ export var h5             = tc<HTMLHeadingElement, PHRASE>('h5')
 export var h6             = tc<HTMLHeadingElement, PHRASE>('h6')
 export var head           = tc<HTMLHeadElement, METADATA>('head')
 export var header         = t<HTMLElement>('header')
-export var html: (p: PROPERTY&T.HTML, h: Tag<HTMLHeadElement>, b: Tag<HTMLBodyElement>) => Tag<HTMLElement>
+export var html: (p: PROPERTY&T.HTML, h: T<HTMLHeadElement>, b: T<HTMLBodyElement>) => Tag<HTMLElement>
                           = t('html')
 export var i              = ph('i')
 export var iframe         = tp<HTMLIFrameElement, T.IFRAME>('iframe')
@@ -79,8 +82,8 @@ export var menu           = tp<HTMLMenuElement, T.MENU>('menu')
 export var meter          = tpc<HTMLMeterElement, T.METER, PHRASE>('meter')
 export var nav            = t<HTMLElement>('nav')
 export var object         = tp<HTMLObjectElement, T.OBJECT>('object')
-export var ol             = tpc<HTMLOListElement, T.OL, Tag<HTMLLIElement>>('ol')
-export var optgroup       = tpc<HTMLOptGroupElement, T.OPTGROUP, Tag<HTMLOptionElement>>('optgroup')
+export var ol             = tpc<HTMLOListElement, T.OL, T<HTMLLIElement>>('ol')
+export var optgroup       = tpc<HTMLOptGroupElement, T.OPTGROUP, T<HTMLOptionElement>>('optgroup')
 export var option         = tpc<HTMLOptionElement, T.OPTION, string|Sig<string>>('option')
 export var p              = tc<HTMLParagraphElement, PHRASE>('p')
 export var pre            = tpc<HTMLPreElement, T.PRE, PHRASE>('pre')
@@ -93,7 +96,7 @@ export var s              = t<HTMLPhraseElement>('s')
 export var samp           = ph('samp')
 export var script         = tp<HTMLScriptElement, T.SCRIPT>('script')
 export var section        = tp<HTMLElement, T.SECTION>('section')
-export var select         = tpc<HTMLSelectElement, T.SELECT, Tag<HTMLOptGroupElement|HTMLOptionElement>>('select')
+export var select         = tpc<HTMLSelectElement, T.SELECT, T<HTMLOptGroupElement|HTMLOptionElement>>('select')
 export var small          = ph('small')
 export var span           = tc<HTMLSpanElement, PHRASE>('span')
 export var strong         = ph('strong')
@@ -101,17 +104,17 @@ export var style          = tp<HTMLStyleElement, T.STYLE>('style')
 export var sub            = ph('sub')
 export var sup            = ph('sup')
 export var table          = tc<HTMLTableElement, TABLE_CHILD>('table')
-export var tbody          = tc<HTMLTableSectionElement, Tag<HTMLTableRowElement>>('tbody')
+export var tbody          = tc<HTMLTableSectionElement, T<HTMLTableRowElement>>('tbody')
 export var td             = tp<HTMLTableDataCellElement, T.TD>('td')
 export var time           = tpc<HTMLTimeElement, T.TIME, PHRASE>('time')
 export var textarea       = tpc<HTMLTextAreaElement, T.TEXTAREA, string|Sig<string>>('textarea')
-export var tfoot          = tc<HTMLTableSectionElement, Tag<HTMLTableRowElement>>('tfoot')
+export var tfoot          = tc<HTMLTableSectionElement, T<HTMLTableRowElement>>('tfoot')
 export var th             = tp<HTMLTableHeaderCellElement, T.TH>('th')
-export var thead          = tc<HTMLTableSectionElement, Tag<HTMLTableRowElement>>('thead')
+export var thead          = tc<HTMLTableSectionElement, T<HTMLTableRowElement>>('thead')
 export var title          = t<HTMLTitleElement>('title')
-export var tr             = tc<HTMLTableRowElement, Tag<HTMLTableDataCellElement|HTMLTableHeaderCellElement>>('tr')
+export var tr             = tc<HTMLTableRowElement, T<HTMLTableDataCellElement|HTMLTableHeaderCellElement>>('tr')
 export var u              = t<HTMLPhraseElement>('u')
-export var ul             = tc<HTMLUListElement, HTMLLIElement>('ul')
+export var ul             = tc<HTMLUListElement, T<HTMLLIElement>>('ul')
 export var video          = tp<HTMLVideoElement, T.VIDEO>('video')
 
 // void element
