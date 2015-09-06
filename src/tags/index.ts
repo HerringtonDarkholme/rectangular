@@ -5,8 +5,9 @@ import {TagName} from '../decorator'
 import {PROPERTY} from '../config'
 import * as T from '../config'
 import {ForImpl} from './for'
+import {IfImpl} from './if'
 
-type T<E extends HTMLElement> = Tag<E> | ForImpl<{}, Tag<E>>
+type T<E extends HTMLElement> = Tag<E> | ForImpl<{}, Tag<E>> | IfImpl<Tag<E>>
 
 function t<E extends HTMLElement>(name: string) {
   return function(props: PROPERTY, ...children: ChildTag[]) {
