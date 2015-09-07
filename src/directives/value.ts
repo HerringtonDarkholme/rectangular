@@ -1,12 +1,13 @@
 import {Prop} from './prop'
 import {Tag} from '../tags/elementRep'
-import {Obs} from '../overkill/index'
+import {Obs, Var} from '../overkill/index'
 import eventManager from '../events/index'
 
 export class Value extends Prop<string> {
   private handler: Function
-  constructor(value?: string) {
-    super('value', value)
+  public v: Var<string>
+  constructor() {
+    super('value')
   }
 
   bind<E extends Tag<HTMLInputElement>>(ele: E) {
@@ -17,6 +18,9 @@ export class Value extends Prop<string> {
     this.handler = function() {
       directive.v(this.value)
     }
+    this.o = Obs(this.v, function(newValue) {
+      element.value = newValue
+    })
     eventManager.on(element, 'keyup', this.handler)
   }
   unbind<E extends Tag<HTMLInputElement>>(ele: E) {

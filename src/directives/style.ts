@@ -18,7 +18,7 @@ export class Style extends Directive<StyleDef> {
     write(() => {
       element.setAttribute('style', convertObjectToStyle(value))
     })
-    Obs(this.v, (newValue) => {
+    this.o = Obs(this.v, (newValue) => {
       write(() => {
         element.setAttribute('style', convertObjectToStyle(newValue))
       })

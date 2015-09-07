@@ -1,4 +1,4 @@
-import {Var, Obs, dispose} from '../overkill/index'
+import {ObsImp, Var, Obs, Sig, dispose} from '../overkill/index'
 import verifier from './verifier'
 import NodeRep from '../tags/nodeRep'
 
@@ -10,15 +10,13 @@ function makeId() {
 abstract class Directive<V> {
   private _id = makeId()
   public name: string
-  public v = Var<V>(undefined)
-  constructor(initial?: V) {
-    this.v(initial)
-  }
+  public v: Sig<V> = Var<V>(undefined)
+  protected o: ObsImp<any, {}>
 
   abstract bind<E extends NodeRep<Node>>(ele: E): void
 
   unbind<E extends NodeRep<Node>>(ele: E): void {
-    dispose(this.v)
+    this.o.dispose()
     this.v = null
   }
 

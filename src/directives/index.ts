@@ -1,6 +1,5 @@
 export { Aria           } from './aria'
 export { Attr           } from './attr'
-export { Bind           } from './bind'
 export { Class          } from './class'
 export { Data           } from './data'
 export { Prop           } from './prop'

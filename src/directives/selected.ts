@@ -1,15 +1,16 @@
 import Directive from './directive'
 import {Tag} from '../tags/elementRep'
-import {Obs} from '../overkill/index'
+import {Obs, Var} from '../overkill/index'
 import eventManager from '../events/index'
 
 export class SelectedOption extends Directive<string> {
   private handler: Function
+  public v: Var<string>
   bind<E extends Tag<HTMLSelectElement>>(ele: E) {
     let directive = this
     let element = ele.element
     if (!(element instanceof HTMLSelectElement)) return
-    Obs(this.v, function(newValue) {
+    this.o = Obs(this.v, function(newValue) {
       let opts = element.options
       for (let i = 0, l = opts.length; i < l; i++) {
         let opt = opts[i]

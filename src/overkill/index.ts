@@ -64,7 +64,7 @@ function Obs<V, C>(fn: (c: C) => V, sub?: Sub<V>): ObsImp<V, C> {
 export function getSinal(f: Var<_> | Rx<_, _>): Signal<_, _> {
   return funcMap.get(f)
 }
-export function isSignal(f: any): f is Var<_> | Rx<_, _> {
+export function isSignal(f: any): f is Sig<_> {
   return funcMap.get(f) !== undefined
 }
 

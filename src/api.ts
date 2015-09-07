@@ -1,6 +1,6 @@
 import {Tag} from './tags/elementRep'
 import {TextRep} from './tags/nodeRep'
-import {Prop, Class, Value, Bind} from './directives/index'
+import {Prop, Class, Value} from './directives/index'
 import {Var} from './overkill/index'
 
 export {Component} from './tags/component'
@@ -23,9 +23,4 @@ export function p(name: string[]) {
   }
   let prop = new Prop(name[0])
   return prop.toString()
-}
-
-export function bind(name: string[]) {
-  let bind = new Bind(name[0])
-  return bind.toString()
 }

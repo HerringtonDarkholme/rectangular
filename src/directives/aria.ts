@@ -16,7 +16,7 @@ export class Aria extends Directive<DataDef> {
         element.setAttribute(`aria-${key}`, data[key])
       }
     })
-    Obs(this.v, (newValue, oldValue) => {
+    this.o = Obs(this.v, (newValue, oldValue) => {
       write(() => {
         for (let key of Object.keys(oldValue)) {
           if (key in newValue) continue
