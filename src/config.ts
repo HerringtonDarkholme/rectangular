@@ -17,6 +17,8 @@ var GLOBAL_ATTRIBUTES = {
   'data': <{[k:string]: string}>{},
   'aria': <{[k:string]: string}>{},
 }
+
+type KVData = {[k:string]: string}
 type GlobalAttributes = {
   'accesskey'?: string,
   'contenteditable'?: boolean,
@@ -32,9 +34,9 @@ type GlobalAttributes = {
   'translate'?: string,
   'lang'?: string,
   'class'?: string | string[],
-  'style'?: {[k:string]: string},
-  'data'?: {[k:string]: string},
-  'aria'?: {[k:string]: string},
+  'style'?: string | KVData,
+  'data'?: KVData,
+  'aria'?: KVData,
 }
 
 var EVENT = [

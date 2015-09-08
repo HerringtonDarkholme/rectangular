@@ -24,3 +24,5 @@ export function p(name: string[]) {
   let prop = new Prop(name[0])
   return prop.toString()
 }
+
+export type KVData = {[k:string]: string}

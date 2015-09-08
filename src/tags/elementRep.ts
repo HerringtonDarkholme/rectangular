@@ -4,8 +4,18 @@ import {Prop} from '../directives/prop'
 import {ChildTag} from './nodeRep'
 import {write} from '../render'
 import {append} from './util'
-import {Sig, isSignal} from '../overkill/index'
+import {Sig, Var} from '../overkill/index'
 import eventManager from '../events/index'
+
+import {Aria,Data,Class,Style} from '../directives/index'
+
+// well know global attributes
+const ATTR_MAPPINGS = {
+  style: Style,
+  class: Class,
+  data: Data,
+  aria: Aria,
+}
 
 export class Tag<T extends HTMLElement> extends NodeRep<T> {
   public children: ChildTag[]
@@ -39,15 +49,25 @@ export class Tag<T extends HTMLElement> extends NodeRep<T> {
       directive.bind(this)
       return
     }
+
     if (value instanceof Directive) {
       this.$directives.push(value)
       value.bind(this)
       return
     }
+
     if (typeof value === 'string') {
       elem.setAttribute(key, value)
       return
     }
+
+    if (key in ATTR_MAPPINGS) {
+      let directive = new ATTR_MAPPINGS[key]
+      directive.v = Var(value)
+      directive.bind(this)
+      directive.unbind(this)
+    }
+
     if (typeof value === 'function') {
       eventManager.on(elem, key, value)
       return
