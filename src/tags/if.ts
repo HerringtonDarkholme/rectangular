@@ -2,16 +2,28 @@ import {Sig, Var, Obs, isSignal, dispose, ObsImp} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
+const EMPTY_NODE_SINGLETON: any = {
+  _render() {
+    // https://dom.spec.whatwg.org/#concept-node-insert
+    return document.createDocumentFragment()
+  },
+  _remove() {}
+}
+
 export class IfImpl<E extends NodeRep<Node>> extends NodeRep<DocumentFragment> {
-  private child: E
+  private child: E = EMPTY_NODE_SINGLETON
   private _anchorBegin: Node
   private _anchorEnd: Node
-  private watcher: ObsImp<{}, {}>
+  private watcher: ObsImp<void, {}>
+  protected sigs: Sig<boolean>[]
+  protected funcs: Array<() => E>
   constructor(
-    private obs: Sig<boolean>,
-    private func: () => E
+    sig: Sig<boolean>,
+    func: () => E
   ) {
     super()
+    this.sigs = [sig]
+    this.funcs = [func]
     let paramName = getParamNames(func)[0] || '_'
     let funcName = func['name'] || 'anonymous_func'
     this._anchorBegin = createAnchor(`begin: If ${paramName} in ${funcName}`, true)
@@ -19,26 +31,24 @@ export class IfImpl<E extends NodeRep<Node>> extends NodeRep<DocumentFragment> {
   }
   _render() {
     let fragment = document.createDocumentFragment()
-    let func = this.func
+    let funcs = this.funcs
     let anchorBegin = this._anchorBegin
     let anchorEnd = this._anchorEnd
-    let obs = this.obs
+    let sigs = this.sigs
     fragment.appendChild(anchorBegin)
-    let bool = obs()
-    this.watcher = Obs(obs, (newVal) => {
-      if (newVal) {
-        this.child = func()
-        let parentNode = anchorBegin.parentNode
-        parentNode.insertBefore(this.child._render(), anchorEnd)
-      } else {
-        this.child._remove()
-      }
-    })
-    if (bool) {
-      this.child = func()
-      fragment.appendChild(this.child._render())
-    }
     fragment.appendChild(anchorEnd)
+    this.watcher = Obs(() => {
+      let func: () => E
+      for (let i = 0, l = sigs.length; i < l; i++) {
+        if (sigs[0]()) {
+          func = this.funcs[i]
+        }
+      }
+      this.child._remove()
+      this.child = func ? func() : EMPTY_NODE_SINGLETON
+      let parentNode = anchorBegin.parentNode
+      parentNode.insertBefore(this.child._render(), anchorEnd)
+    })
     return fragment
   }
 
@@ -58,12 +68,26 @@ export class IfImpl<E extends NodeRep<Node>> extends NodeRep<DocumentFragment> {
   }
 }
 
-export function If<E extends NodeRep<Node>>(obs: boolean, func: () => E): IfImpl<E>
-export function If<E extends NodeRep<Node>>(obs: Sig<boolean>, func: () => E): IfImpl<E>
-export function If<E extends NodeRep<Node>>(obs: boolean | Sig<boolean>, func: () => E): IfImpl<E> {
-  if (typeof obs === 'boolean') {
-    return new IfImpl<E>(Var(obs), func)
+class EnhancedIf<E extends NodeRep<Node>> extends IfImpl<E> {
+  ElseIf(sig: Sig<boolean>, func: () => E): EnhancedIf<E> {
+    this.sigs.push(sig)
+    this.funcs.push(func)
+    return this
+  }
+
+  Else(func: () => E): IfImpl<E> {
+    this.sigs.push(Var(true))
+    this.funcs.push(func)
+    return this
+  }
+}
+
+export function If<E extends NodeRep<Node>>(sig: boolean, func: () => E): EnhancedIf<E>
+export function If<E extends NodeRep<Node>>(sig: Sig<boolean>, func: () => E): EnhancedIf<E>
+export function If<E extends NodeRep<Node>>(sig: boolean | Sig<boolean>, func: () => E): EnhancedIf<E> {
+  if (typeof sig === 'boolean') {
+    return new EnhancedIf<E>(Var(sig), func)
   } else {
-    return new IfImpl<E>(obs, func)
+    return new EnhancedIf<E>(sig, func)
   }
 }
