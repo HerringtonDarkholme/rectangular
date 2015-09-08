@@ -22,7 +22,8 @@ class MyComponent extends Component {
         div({class: 'btn',click() {submit()}}, 'add'),
         div({}, Rx(() => '' + todos().length)),
         If(Rx(() => todos().length > 5),
-           () => div({class: 'warn'}, 'Too many todos!'))
+           () => div({class: 'warn'}, 'Too many todos!')
+        ).Else(() => div({}, 'just fine'))
       ))
   }
 }

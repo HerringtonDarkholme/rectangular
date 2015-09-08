@@ -40,8 +40,9 @@ export class IfImpl<E extends NodeRep<Node>> extends NodeRep<DocumentFragment> {
     this.watcher = Obs(() => {
       let func: () => E
       for (let i = 0, l = sigs.length; i < l; i++) {
-        if (sigs[0]()) {
+        if (sigs[i]()) {
           func = this.funcs[i]
+          break
         }
       }
       this.child._remove()
@@ -53,10 +54,8 @@ export class IfImpl<E extends NodeRep<Node>> extends NodeRep<DocumentFragment> {
   }
 
   _remove() {
-    if (this.child) {
-      this.child._remove()
-      this.child = null
-    }
+    this.child._remove()
+    this.child = null
     let parent = this._anchorBegin.parentNode
     if (parent) {
       parent.removeChild(this._anchorBegin)
