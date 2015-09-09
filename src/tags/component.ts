@@ -9,7 +9,7 @@ export class Component extends Tag<HTMLElement> {
 
   preRender(fn: Function) { this.on('preRender', fn) }
   postRender(fn: Function) { this.on('postRender', fn) }
-  // preRemove(fn: Function) { this.on('preRemove', fn) }
+  preRemove(fn: Function) { this.on('preRemove', fn) }
   postRemove(fn: Function) { this.on('postRemove', fn)}
 
   _render() {
