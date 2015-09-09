@@ -6,6 +6,6 @@
     "outDir": "dist"
   },
   "files": [
-    "src/overkill/ok", "test"
+    "src/overkill/ok"
   ]
 }

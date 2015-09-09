@@ -96,6 +96,7 @@ export class VarImp<T, C> extends Signal<T, C> {
       var obs = this.observers
       this.observers = new Set<any>()
       obs.forEach(o => o.computeValue())
+      flushPendingObserver()
       inWatch = false
     }
     return this.context
@@ -107,6 +108,7 @@ export class VarImp<T, C> extends Signal<T, C> {
       var obs = this.observers
       this.observers = new Set<any>()
       obs.forEach(o => o.computeValue())
+      flushPendingObserver()
       inWatch = false
     }
     return this.context
@@ -129,19 +131,31 @@ export class VarImp<T, C> extends Signal<T, C> {
 
 export type Subscriber<V> = (n: V, o: V) => void
 const NOOP = () => void 0
+var pendingObserverSet = new Set<ObsImp<_,_>>()
+function flushPendingObserver() {
+  pendingObserverSet.forEach(obs => obs['_makeSideEffect']())
+  pendingObserverSet.clear()
+}
+
 export class ObsImp<V, C> extends Signal<V, C> {
   private observees: Array<Observee> = []
   private expr: (ctx: C) => V
   private sideEffect: Subscriber<V>
+
   constructor(expr: (ctx: C) => V, sideEffect?: Subscriber<V>) {
     super()
     this.expr = expr
     this.sideEffect = sideEffect || NOOP
     inWatch = true
-    this.computeValue()
+    this._makeSideEffect()
     inWatch = false
   }
+
   computeValue() {
+    pendingObserverSet.add(this)
+  }
+
+  private _makeSideEffect() {
     for (let sig of this.observees) {
       sig.retireFrom(this)
     }

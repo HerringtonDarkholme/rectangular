@@ -190,6 +190,19 @@ describe('Obs', function() {
     assert(calledTimes === 1)
   })
 
+  it('should not get called twice', function() {
+    var a = new Var(123)
+    var b = new Rx(() => a.apply() + 123)
+    var calledTimes = 0
+    new Obs(function() {
+      a.apply() + b.apply()
+      calledTimes++
+    })
+    assert(calledTimes === 1)
+    a.update(234)
+    assert(calledTimes === 2)
+  })
+
 })
 
 describe('Rx', function() {
