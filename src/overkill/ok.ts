@@ -162,6 +162,7 @@ export class ObsImp<V, C> extends Signal<V, C> {
   }
 
   dispose() {
+    if (!this.observees) return
     this.observees.forEach(s => s.dispose(this))
     this.observees = null
     this.value = null
