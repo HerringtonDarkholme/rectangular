@@ -161,6 +161,7 @@ export class ObsImp<V, C> extends Signal<V, C> {
     }
     this.observees = []
     let ctx = this.context
+    // do not bind ctx to expr, it breaks Var
     let fn = this.expr.bind(ctx)
     let newValue = caller.withValue(this)(fn)
     if (this.value !== UNINTIALIZE) {
