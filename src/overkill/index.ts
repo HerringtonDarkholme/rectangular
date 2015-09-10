@@ -6,42 +6,34 @@ export {ObsImp} from './ok'
 
 export type _ = {}
 
-export enum UpdatePolicy {
-  FORCE, BY_REFERENCE
-}
-
 export interface Var<T> {
   (): T
   (t: T): void
-  (t: T, byRef: UpdatePolicy): void
-  (fn: (t: T) => boolean, byRef: UpdatePolicy): void
 }
 var funcMap = new WeakMap<Function, Signal<_, _>>()
 
-export function Var<T>(initialValue: T): Var<T> {
+interface VarAPI {
+  <T>(t: T): Var<T>
+  mutate<T>(v: Var<T>, func: (t: T) => boolean)
+}
+
+
+export var Var = function Var<T>(initialValue: T): Var<T> {
   var vImp = new VarImp(initialValue)
-  var func = (t?: any, policy?: UpdatePolicy) => {
-    switch (policy) {
-    case UpdatePolicy.FORCE:
-      vImp.update(t, true)
-      break;
-    case UpdatePolicy.BY_REFERENCE:
-      if (typeof t !== 'function') {
-        throw new Error('updateRef should use function')
-      }
-      vImp.updateRef(t)
-      break
-    default:
-      if (t === undefined)  {
+  var func = function (t?: any) {
+      if (arguments.length === 0)  {
         return vImp.apply()
       } else {
         vImp.update(t)
       }
-      break
     }
-  }
   funcMap.set(func, vImp)
   return func
+} as VarAPI
+
+Var.mutate = function mutate<T>(v: Var<T>, func: (t: T) => boolean) {
+  var vImp: VarImp<T, _> = funcMap.get(v) as any
+  vImp.updateRef(func)
 }
 
 export interface Rx<T, C> {

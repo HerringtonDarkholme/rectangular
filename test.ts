@@ -1,6 +1,6 @@
 import {Component, p, Tag, For, If} from './src/api'
 import {div, input, label} from './src/tags/index'
-import {Obs, Var, Rx, UpdatePolicy} from './src/overkill/index'
+import {Obs, Var, Rx} from './src/overkill/index'
 import {KVData} from './src/api'
 
 import {ul, li} from './src/tags/index'
@@ -53,10 +53,10 @@ mount(btn)
 mount(change)
 mount(new MyComponent)
 mount(For(todos, (t, i) => {
-  var click = () => todos((e) => {
+  var click = () => Var.mutate(todos, (e) => {
     e.splice(i, 1)
     return false
-  }, UpdatePolicy.BY_REFERENCE)
+  })
   return label({},
     input({type: 'checkbox', click}),
     t

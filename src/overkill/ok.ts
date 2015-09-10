@@ -161,7 +161,7 @@ export class ObsImp<V, C> extends Signal<V, C> {
     }
     this.observees = []
     let ctx = this.context
-    let fn = this.expr.bind(ctx, ctx)
+    let fn = this.expr.bind(ctx)
     let newValue = caller.withValue(this)(fn)
     if (this.value !== UNINTIALIZE) {
       let oldState = inWatch
