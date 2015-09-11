@@ -1,13 +1,14 @@
-export interface Change {
-  name: string
-  oldValue: any
+export class Change<V> {
+  constructor(
+    public type: string,
+    public name: string | number,
+    public value: V
+  ) {}
 }
 
 export interface Diff<V> {
-  oldValue: V
-  insertions: Change[]
-  deletions: Change[]
-  substitutions: Change[]
+  target: V
+  changes: Change<any>[]
 }
 
 export interface DiffChecker<V> {

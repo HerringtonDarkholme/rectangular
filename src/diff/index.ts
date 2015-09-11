@@ -11,9 +11,6 @@ class DefaultDiffChecker<V> implements DiffChecker<V> {
 
   getDiff(v: V): Diff<V> {
     let oldV = this.oldValue
-    let insertions = []
-    let deletions = []
-    let substitutions = []
     let objType = typeof oldV
     // different type
     // primitives
@@ -23,10 +20,8 @@ class DefaultDiffChecker<V> implements DiffChecker<V> {
         oldV === null || v === null
        ) {
       return {
-        oldValue: oldV,
-        insertions,
-        deletions,
-        substitutions
+        target: oldV,
+        changes: []
       }
     }
 
