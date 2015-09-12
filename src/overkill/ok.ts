@@ -130,7 +130,7 @@ export class VarImp<T, C> extends Signal<T, C> {
 }
 
 export type Subscriber<V> = (n: V, o: V) => void
-const NOOP = () => void 0
+const NOOP: () => void = () => void 0
 var pendingObserverSet = new Set<ObsImp<_,_>>()
 function flushPendingObserver() {
   pendingObserverSet.forEach(obs => obs['_makeSideEffect']())
