@@ -7,7 +7,7 @@ export class Change<V> {
 }
 
 export interface Diff<V> {
-  target: V
+  oldValue: V
   changes: Change<any>[]
 }
 

@@ -1,35 +1,43 @@
-const objectTag = '[object Object]'
-const fnToString = Function.prototype.toString
-const objCtorString = fnToString.call(Object)
+import {Diff, Change, DiffChecker} from './interface'
 
-function isObjectLike(o: any): o is Object {
-  return o != null && typeof o === 'object' && !Array.isArray(o)
+export function assign(dest: any, src: any) {
+  for (let key of Object.keys(src)) {
+    dest[key] = src[key]
+  }
+  return dest
 }
 
-  function isHostObject(value: any) {
-    // Many host objects are `Object` objects that can coerce to strings
-    // despite having improperly defined `toString` methods.
-    var result = false;
-    if (value != null && typeof value.toString != 'function') {
-      try {
-        result = !!(value + '');
-      } catch(e) {}
+export class ObjectDiffChecker<V> implements DiffChecker<V> {
+  private snapshot: V
+  setValue(v: V): V {
+    return this.snapshot = assign({}, v)
+  }
+
+  getDiff(newObj: V): Diff<V> {
+    let changes: Change<any>[] = []
+    let oldObj = this.snapshot
+    for (let key of Object.keys(newObj)) {
+      if (oldObj.hasOwnProperty(key)) {
+        if (oldObj[key] === newObj[key]) continue
+        changes.push(new Change(
+          'update', key, oldObj[key]
+        ))
+      } else {
+        changes.push(new Change(
+          'add', key, newObj[key]
+        ))
+      }
     }
-    return result;
+    for (let key of Object.keys(oldObj)) {
+      if (!newObj.hasOwnProperty(key)) {
+        changes.push(new Change(
+          'delete', key, oldObj[key]
+        ))
+      }
+    }
+    return {
+      oldValue: this.snapshot,
+      changes
+    }
   }
-
-function isPlainObject(value: any) {
-  if (!isObjectLike(value) || Object.prototype.toString.call(value) != objectTag || isHostObject(value)) {
-    return false;
-  }
-  var proto = typeof value.constructor == 'function'
-    ? Object.getPrototypeOf(value)
-    : Object.prototype;
-
-  if (proto === null) {
-    return true;
-  }
-  var Ctor = proto.constructor;
-  return (typeof Ctor == 'function' &&
-    Ctor instanceof Ctor && Function.prototype.call(Ctor) == objCtorString);
 }

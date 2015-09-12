@@ -1,68 +1,5 @@
 import {Diff, Change, DiffChecker} from './interface'
 
-export function saveArraySnapshot<V>(v: V[]): V[] {
-  return v.slice()
-}
-
-export function getArrayDiff<V>(newArray: V[], oldArray: V[]): Diff<V[]> {
-  let row = newArray.length, col = oldArray.length
-  let changes: Change<V>[] = []
-  let distances = levenshteinDistance(newArray, oldArray)
-  let i = row, j = col
-  while (i > 0 || j > 0) {
-    if (i == 0) {
-      j -= 1
-      changes.push(new Change(
-        'delete', i, oldArray[j]
-      ))
-      continue
-    }
-    if (j == 0) {
-      i -= 1
-      changes.push(new Change(
-        'add', i, newArray[i]
-      ))
-      continue
-    }
-    let current = distances[i][j]
-    let diag = distances[i-1][j-1]
-    let left = distances[i][j-1]
-    let upper = distances[i-1][j]
-    let min = Math.min(diag, left, upper)
-    if (min === current) {
-      i -= 1
-      j -= 1
-      continue
-    }
-    if (min === left) {
-      j -= 1
-      changes.push(new Change(
-        'delete', i, oldArray[j]
-      ))
-      continue
-    }
-
-    if (min === upper) {
-      i -= 1
-      changes.push(new Change(
-        'add', i, newArray[i]
-      ))
-      continue
-    }
-    if (min === diag) {
-      i -= 1
-      j -= 1
-      changes.push(new Change(
-        'update', i, newArray[i]
-      ))
-    }
-  }
-  return {
-    target: oldArray,
-    changes
-  }
-}
-
 export function levenshteinDistance(newArray: any[], oldArray: any[]): number[][] {
   let row = newArray.length + 1
   let col = oldArray.length + 1
@@ -91,4 +28,71 @@ export function levenshteinDistance(newArray: any[], oldArray: any[]): number[][
     }
   }
   return distances
+}
+
+export class ArrayDiffChecker<V> implements DiffChecker<V[]> {
+  private snapshot: V[]
+  setValue(vs: V[]): V[] {
+    return this.snapshot = vs.slice()
+  }
+
+  getDiff(newArray: V[]): Diff<V[]> {
+    let oldArray = this.snapshot
+    let row = newArray.length, col = oldArray.length
+    let changes: Change<V>[] = []
+    let distances = levenshteinDistance(newArray, oldArray)
+    let i = row, j = col
+    while (i > 0 || j > 0) {
+      if (i == 0) {
+        j -= 1
+        changes.push(new Change(
+          'delete', i, oldArray[j]
+        ))
+        continue
+      }
+      if (j == 0) {
+        i -= 1
+        changes.push(new Change(
+          'add', i, newArray[i]
+        ))
+        continue
+      }
+      let current = distances[i][j]
+      let diag = distances[i-1][j-1]
+      let left = distances[i][j-1]
+      let upper = distances[i-1][j]
+      let min = Math.min(diag, left, upper)
+      if (min === current) {
+        i -= 1
+        j -= 1
+        continue
+      }
+      if (min === left) {
+        j -= 1
+        changes.push(new Change(
+          'delete', i, oldArray[j]
+        ))
+        continue
+      }
+
+      if (min === upper) {
+        i -= 1
+        changes.push(new Change(
+          'add', i, newArray[i]
+        ))
+        continue
+      }
+      if (min === diag) {
+        i -= 1
+        j -= 1
+        changes.push(new Change(
+          'update', i, newArray[i]
+        ))
+      }
+    }
+    return {
+      oldValue: oldArray,
+      changes
+    }
+  }
 }
