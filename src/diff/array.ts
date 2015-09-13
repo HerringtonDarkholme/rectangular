@@ -1,4 +1,5 @@
 import {Diff, Change, DiffChecker} from './interface'
+import {zip} from './util'
 
 export function levenshteinDistance(newArray: any[], oldArray: any[]): number[][] {
   let row = newArray.length + 1
@@ -35,10 +36,7 @@ export class ArrayDiffChecker<V> implements DiffChecker<V[]> {
 
   static equals<V>(v1: V[], v2: V[]): boolean {
     if (v1.length !== v2.length) return false
-    for (let i = 0, l = v1.length; i < l; i++) {
-      if (v1[i] !== v2[i]) return false
-    }
-    return true
+    return zip(v1, v2).every(([a, b]) => a === b)
   }
 
   setValue(vs: V[]): V[] {
@@ -95,7 +93,7 @@ export class ArrayDiffChecker<V> implements DiffChecker<V[]> {
         i -= 1
         j -= 1
         changes.push(new Change(
-          'update', i, newArray[i]
+          'update', i, oldArray[i]
         ))
       }
     }

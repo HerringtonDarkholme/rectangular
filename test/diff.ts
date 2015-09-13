@@ -60,3 +60,30 @@ describe('Levinshtein distance', function() {
 
 })
 
+describe('array diff', function() {
+  let diffChecker = new arrayDiff.ArrayDiffChecker()
+  function makeArrayTest(oldA: any[], newA: any[], expected: any[]) {
+    diffChecker.setValue(oldA)
+    let changes = diffChecker.getDiff(newA).changes
+    assert.deepEqual(changes, expected)
+  }
+
+  it('should check array delete', () => {
+    makeArrayTest([1,2,3,4,5], [2,3,4,5], [
+      {name: 0, type: 'delete', value: 1}
+    ])
+  })
+
+  it('should check array add', () => {
+    makeArrayTest([2,3,4,5], [1, 2,3,4,5], [
+      {name: 0, type: 'add', value: 1}
+    ])
+  })
+
+  it('should check array update', () => {
+    makeArrayTest([1,2,3,4,5], [1,2,2,4,5], [
+      {name: 2, type: 'update', value: 3}
+    ])
+  })
+
+})

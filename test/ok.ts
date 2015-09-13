@@ -2,7 +2,7 @@
 /// <reference path='../typings/node.d.ts' />
 
 var assert = require('power-assert')
-var ok = require('../dist/ok')
+var ok = require('../dist/overkill/ok')
 var Rx = ok.RxImp
 var Obs = ok.ObsImp
 var Var = ok.VarImp
