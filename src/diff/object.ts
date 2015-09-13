@@ -9,6 +9,17 @@ export function assign(dest: any, src: any) {
 
 export class ObjectDiffChecker<V> implements DiffChecker<V> {
   private snapshot: V
+
+  static equals<V>(v1: V, v2: V): boolean {
+    for (let key of Object.keys(v1)) {
+      if (!v2.hasOwnProperty(key)) return false
+    }
+    for (let key of Object.keys(v2)) {
+      if (!v1.hasOwnProperty(key)) return false
+    }
+    return true
+  }
+
   setValue(v: V): V {
     return this.snapshot = assign({}, v)
   }

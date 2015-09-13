@@ -5,6 +5,10 @@ const PRIMITIVES = ['undefined', 'boolean', 'number', 'string', 'symbol']
 class DefaultDiffChecker<V> implements DiffChecker<V> {
   private value: V
 
+  static equals<V>(v1: V, v2: V): boolean {
+    return v1 === v2
+  }
+
   setValue(v: V): V {
     return this.value = v
   }
@@ -16,5 +20,3 @@ class DefaultDiffChecker<V> implements DiffChecker<V> {
     }
   }
 }
-
-export var defaultDiffChecker = new DefaultDiffChecker

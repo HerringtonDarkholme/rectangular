@@ -32,6 +32,15 @@ export function levenshteinDistance(newArray: any[], oldArray: any[]): number[][
 
 export class ArrayDiffChecker<V> implements DiffChecker<V[]> {
   private snapshot: V[]
+
+  static equals<V>(v1: V[], v2: V[]): boolean {
+    if (v1.length !== v2.length) return false
+    for (let i = 0, l = v1.length; i < l; i++) {
+      if (v1[i] !== v2[i]) return false
+    }
+    return true
+  }
+
   setValue(vs: V[]): V[] {
     return this.snapshot = vs.slice()
   }

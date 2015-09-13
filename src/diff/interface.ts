@@ -16,3 +16,7 @@ export interface DiffChecker<V> {
   getDiff(v: V): Diff<V>
 }
 
+export interface DiffStrategy {
+  new<V>(): DiffChecker<V>
+  equals<V>(v1: V, v2: V): boolean
+}
