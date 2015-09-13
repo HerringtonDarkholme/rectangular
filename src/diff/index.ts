@@ -1,8 +1,8 @@
-import {Diff, Change, DiffChecker} from './interface'
+import {Diff, Change, DiffChecker, DiffStrategy} from './interface'
 
 const PRIMITIVES = ['undefined', 'boolean', 'number', 'string', 'symbol']
 
-class DefaultDiffChecker<V> implements DiffChecker<V> {
+export class DefaultDiffChecker<V> implements DiffChecker<V> {
   private value: V
 
   static equals<V>(v1: V, v2: V): boolean {
@@ -20,3 +20,7 @@ class DefaultDiffChecker<V> implements DiffChecker<V> {
     }
   }
 }
+
+export * from './interface'
+export * from './array'
+export * from './object'

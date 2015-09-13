@@ -1,5 +1,6 @@
 /// <reference path='../../typings/es6-collections.d.ts' />
 import 'es6-collections'
+import {DefaultDiffChecker, DiffStrategy, DiffChecker, Diff} from '../diff/index'
 
 export class Caller<T> {
   private callers: T[] = []
@@ -72,8 +73,12 @@ export function execOutOfWatch(fn: Function) {
 
 export class VarImp<T, C> extends Signal<T, C> {
   private observers = new Set<Observer>()
-  constructor(value: T) {
+  private diff: DiffStrategy
+  constructor(value: T, diff?: DiffStrategy) {
     super()
+    this.diff = diff
+      ? diff
+      : DefaultDiffChecker
     this.update(value)
   }
 
@@ -89,8 +94,9 @@ export class VarImp<T, C> extends Signal<T, C> {
   }
 
   // when Var update, all its observers should re-watch
-  update(newValue: T, force?: boolean): C {
-    if (this.value !== newValue || force) {
+  update(newValue: T): C {
+    let diff = this.diff
+    if (!diff.equals(this.value, newValue)) {
       inWatch = true
       this.value = newValue
       var obs = this.observers
@@ -129,7 +135,7 @@ export class VarImp<T, C> extends Signal<T, C> {
   }
 }
 
-export type Subscriber<V> = (n: V, o: V) => void
+export type Subscriber<V> = (n: V, o: Diff<V>) => void
 const NOOP: () => void = () => void 0
 var pendingObserverSet = new Set<ObsImp<_,_>>()
 function flushPendingObserver() {
@@ -141,11 +147,18 @@ export class ObsImp<V, C> extends Signal<V, C> {
   private observees: Array<Observee> = []
   private expr: (ctx: C) => V
   private sideEffect: Subscriber<V>
+  private diffChecker: DiffChecker<V>
 
-  constructor(expr: (ctx: C) => V, sideEffect?: Subscriber<V>) {
+  constructor(expr: (ctx: C) => V,
+              sideEffect?: Subscriber<V>,
+              diff?: DiffStrategy
+             ) {
     super()
     this.expr = expr
     this.sideEffect = sideEffect || NOOP
+    this.diffChecker = diff
+      ? new diff<V>()
+      : new DefaultDiffChecker<V>()
     inWatch = true
     this._makeSideEffect()
     inWatch = false
@@ -165,12 +178,14 @@ export class ObsImp<V, C> extends Signal<V, C> {
     let fn = this.expr.bind(ctx)
     let newValue = caller.withValue(this)(fn)
     if (this.value !== UNINTIALIZE) {
+      let diff = this.diffChecker.getDiff(newValue)
       let oldState = inWatch
       inWatch = false
-      this.sideEffect(newValue, this.value)
+      this.sideEffect(newValue, diff)
       inWatch = oldState
     }
     this.value = newValue
+    this.diffChecker.setValue(newValue)
   }
   watch(child: Observee) {
     this.observees.push(child)
@@ -190,9 +205,14 @@ export class RxImp<T, C> extends Signal<T, C> {
   private observers = new Set<Observer>()
   private observees: Array<Observee> = []
   private expr: (ctx: C) => T
-  constructor(expr: (ctx: C) => T) {
+  private diff: DiffStrategy
+
+  constructor(expr: (ctx: C) => T, diff?: DiffStrategy) {
     super()
     this.expr = expr
+    this.diff = diff
+      ? diff
+      : DefaultDiffChecker
   }
   computeValue() {
     for (let sig of this.observees) {
@@ -201,7 +221,7 @@ export class RxImp<T, C> extends Signal<T, C> {
     this.observees = []
     let ctx = this.context
     let newValue = caller.withValue(this)(this.expr.bind(ctx, ctx))
-    if (this.value !== newValue) {
+    if (!this.diff.equals(this.value, newValue)) {
       this.value = newValue
       let obs = this.observers
       this.observers = new Set<any>()

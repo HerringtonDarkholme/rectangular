@@ -24,9 +24,10 @@ export class ObjectDiffChecker<V> implements DiffChecker<V> {
     return this.snapshot = assign({}, v)
   }
 
-  getDiff(newObj: V): Diff<V> {
+  getDiff(v: V): Diff<V> {
     let changes: Change<any>[] = []
-    let oldObj = this.snapshot
+    let oldObj: any = this.snapshot
+    let newObj: any = v
     for (let key of Object.keys(newObj)) {
       if (oldObj.hasOwnProperty(key)) {
         if (oldObj[key] === newObj[key]) continue

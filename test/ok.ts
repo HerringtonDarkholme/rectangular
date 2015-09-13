@@ -180,7 +180,7 @@ describe('Obs', function() {
     new Obs(() => a.apply(), (n, o) => {
       b.apply()
       assert(n === 456)
-      assert(o === 123)
+      assert.deepEqual(o, {oldValue: 123, changes: []})
       calledTimes++
     })
     assert(calledTimes === 0)

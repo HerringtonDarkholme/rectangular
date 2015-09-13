@@ -94,4 +94,8 @@ describe('array diff', function() {
     ])
   })
 
+  it('should check same array', () => {
+    makeArrayTest('saturday'.split(''), 'saturday'.split(''), [])
+  })
+
 })
