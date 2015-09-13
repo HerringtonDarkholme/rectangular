@@ -93,10 +93,11 @@ export class ArrayDiffChecker<V> implements DiffChecker<V[]> {
         i -= 1
         j -= 1
         changes.push(new Change(
-          'update', i, oldArray[i]
+          'update', i, oldArray[j]
         ))
       }
     }
+    changes.reverse()
     return {
       oldValue: oldArray,
       changes

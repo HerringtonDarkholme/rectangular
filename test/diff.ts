@@ -86,4 +86,12 @@ describe('array diff', function() {
     ])
   })
 
+  it('should check complex array diff', () => {
+    makeArrayTest('saturday'.split(''), 'sunday'.split(''), [
+      {name: 1, type: 'delete', value: 'a'},
+      {name: 1, type: 'delete', value: 't'},
+      {name: 2, type: 'update', value: 'r'}
+    ])
+  })
+
 })
