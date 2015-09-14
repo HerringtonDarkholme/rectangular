@@ -1,5 +1,5 @@
 import {Diff, Change, DiffChecker} from './interface'
-import {zip} from './util'
+import {zip} from '../util'
 
 export function levenshteinDistance(newArray: any[], oldArray: any[]): number[][] {
   let row = newArray.length + 1
