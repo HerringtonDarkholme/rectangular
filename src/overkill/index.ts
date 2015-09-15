@@ -18,7 +18,7 @@ var funcMap = new WeakMap<Function, Signal<_, _>>()
 
 interface VarAPI {
   <T>(t: T): Var<T>
-  mutate<T>(v: Var<T>, func: (t: T) => boolean)
+  mutate<T>(v: Var<T>, func: (t: T) => any)
   byDiff(dff: DiffStrategy): <T>(t: T) => Var<T>
   throttle<T>(interval: number, initialValue?: T): Var<T>
   debounce<T>(interval: number, initialValue?: T): Var<T>
@@ -44,7 +44,7 @@ export var Var = function Var<T>(initialValue: T): Var<T> {
   return func
 } as VarAPI
 
-Var.mutate = function mutate<T>(v: Var<T>, func: (t: T) => boolean) {
+Var.mutate = function mutate<T>(v: Var<T>, func: (t: T) => any) {
   var vImp: VarImp<T, _> = funcMap.get(v) as any
   vImp.updateRef(func)
 }
@@ -119,7 +119,7 @@ export var Obs: ObsAPI = function Obs<V, C>(fn: (c: C) => V, sub?: Sub<V>): ObsI
   return new ObsImp(fn, sub)
 }
 
-export function getSinal(f: Var<_> | Rx<_, _>): Signal<_, _> {
+export function getSignal(f: Var<_> | Rx<_, _>): Signal<_, _> {
   return funcMap.get(f)
 }
 export function isSignal(f: any): f is Sig<_> {

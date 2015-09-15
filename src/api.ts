@@ -8,6 +8,7 @@ export * from './tags/index'
 export {Tag} from './tags/elementRep'
 export * from './tags/for'
 export * from './tags/if'
+export * from './decorator'
 
 
 const directiveMapping = {
