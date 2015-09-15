@@ -75,7 +75,7 @@ class NameCard extends Component {
   lastName = Var('Smith') // as plain function
   // Rx is a computed observable, reactive to Var used in computation
   fullName = Rx(_ => {
-    let {fullName: fn, lastName: ln} = this
+    let {firstName: fn, lastName: ln} = this
     // observable is auto binded to instance
     return `${fn()} ${ln()}`
   })
