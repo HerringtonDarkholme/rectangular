@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "module": "commonjs",
     "experimentalDecorators": true,
     "outDir": "dist"
