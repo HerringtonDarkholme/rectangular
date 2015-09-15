@@ -67,5 +67,5 @@ export function isPlainObject(value: any) {
   }
   var Ctor = proto.constructor;
   return (typeof Ctor == 'function' &&
-    Ctor instanceof Ctor && Function.prototype.call(Ctor) == objCtorString);
+    Ctor instanceof Ctor && Function.prototype.toString.call(Ctor) == objCtorString);
 }

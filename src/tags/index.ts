@@ -6,21 +6,33 @@ import {PROPERTY} from '../config'
 import * as T from '../config'
 import {ForImpl} from './for'
 import {IfImpl} from './if'
+import {isPlainObject} from './util'
 
 type T<E extends HTMLElement> = Tag<E> | ForImpl<{}, Tag<E>> | IfImpl<Tag<E>>
 
-function t<E extends HTMLElement>(name: string) {
-  return function(props: PROPERTY, ...children: ChildTag[]) {
-    return new Tag<E>(name, props, children)
-  }
+interface TagMaker<T, C, E extends HTMLElement> {
+  (props: PROPERTY & T, ...children: C[]): Tag<E>
+  (...children: C[]): Tag<E>
 }
 
-var v: <E extends HTMLElement>(n: string) => (p: PROPERTY) => Tag<E> = t
-var tp: <E extends HTMLElement, T>(n: string) => (p: PROPERTY & T, ...c: ChildTag[]) => Tag<E> = t
-var vp: <E extends HTMLElement, T>(n: string) => (p: PROPERTY & T) => Tag<E> = t
-var tc: <E extends HTMLElement, C>(n: string) => (p: PROPERTY, ...c: C[]) => Tag<E> = t
-var tpc: <E extends HTMLElement, P, C>(n: string) => (p: PROPERTY&P, ...c: C[]) => Tag<E> = t
-var ph: (n: string) => (p: PROPERTY, ...c: PHRASE[]) => Tag<HTMLPhraseElement> = t
+function t<E extends HTMLElement>(name: string) {
+  return function(props: any, ...children: any[]) {
+    if (arguments.length === 0) {
+      return new Tag<E>(name, {}, [])
+    } else if (!isPlainObject(props)){
+      return new Tag<E>(name, {}, [props].concat(children))
+    } else {
+      return new Tag<E>(name, props, children)
+    }
+  } as TagMaker<{}, ChildTag, E>
+}
+
+var v: <E extends HTMLElement>(n: string) => (p?: PROPERTY) => Tag<E> = t
+var tp: <E extends HTMLElement, T>(n: string) => TagMaker<T, ChildTag, E> = t
+var vp: <E extends HTMLElement, T>(n: string) => (p?: PROPERTY & T) => Tag<E> = t
+var tc: <E extends HTMLElement, C>(n: string) => TagMaker<{}, C, E> = t
+var tpc: <E extends HTMLElement, P, C>(n: string) => TagMaker<P, C, E> = t
+var ph: (n: string) => TagMaker<{}, PHRASE, HTMLPhraseElement> = t
 
 type PHRASE = string | Sig<string> | T<HTMLPhraseElement | HTMLAudioElement | HTMLButtonElement | HTMLCanvasElement | HTMLDataListElement | HTMLEmbedElement | HTMLIFrameElement | HTMLImageElement | HTMLInputElement | HTMLLabelElement | HTMLMeterElement | HTMLObjectElement | HTMLProgressElement | HTMLQuoteElement | HTMLScriptElement | HTMLSelectElement | HTMLTextAreaElement | HTMLTimeElement | HTMLVideoElement | HTMLAnchorElement | HTMLAreaElement | HTMLLinkElement | HTMLMapElement>
 

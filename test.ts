@@ -15,22 +15,22 @@ function render({newTodo, todos}: MyComponent) {
 
   return (
     div({class: 'control-form'},
-      div({class: 'heheh'}, 'ewwwee'),
-      div({class: 'heheh'}, newTodo),
+      div('ewwwee'),
+      div(newTodo),
       inp,
       div({class: 'btn',click() {submit()}}, 'add'),
-      div({}, Rx(_ => '' + todos().length)),
+      div(Rx(_ => '' + todos().length)),
 
       If(Rx(_ => todos().length > 5),
          () => div({class: 'warn'}, 'Too many todos!')
-      ).Else(() => div({}, 'just fine')),
+      ).Else(() => div('just fine')),
 
       For(todos, (t, i) => {
       var click = () => Var.mutate(todos, (e) => {
         e.splice(i, 1)
         return false
       })
-      return label({},
+      return label(
         input({type: 'checkbox', click}),
         t)
       })
@@ -56,11 +56,11 @@ var btn = div({class: 'btn btn-lg', style: btnStyle, click() {alert('button clic
   btnText = Var('test')
 );
 
-// mount(ul({},
-//   li({}, '123'),
-//   li({}, '123'),
-//   li({}, '123'),
-//   For([1,2,3,4], (v) => li({}, ''+v))
+// mount(ul(
+//   li('123'),
+//   li('123'),
+//   li('123'),
+//   For([1,2,3,4], (v) => li(''+v))
 // ))
 
 var change = div({class: 'btn', click(e) {btnText(Math.random())}}, 'change text');
