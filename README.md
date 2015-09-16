@@ -31,7 +31,7 @@ function view(n: NameCard) {
   var style = Var({fontSize: '12px'})
   var enlarge = () => Var.mutate(style, s => s.fontSize = '24px')
 
-  // method as event listener, computed property for data passing and dom manipulation
+  // method as event listener, computed property for binding
   return dl(
     {[p`style`]: style, click() {enlarge()}},
     dt('name'), // plain text
