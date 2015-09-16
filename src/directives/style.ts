@@ -8,7 +8,7 @@ interface StyleDef {
 }
 
 function convertObjectToStyle(style: StyleDef): string {
-  return Object.keys(style).map(k => `${k}: ${style[k]}`).join(';')
+  return Object.keys(style).map(k => `${camelToSpinal(k)}: ${style[k]}`).join(';')
 }
 
 export class Style extends Directive<StyleDef> {
@@ -24,4 +24,11 @@ export class Style extends Directive<StyleDef> {
       })
     })
   }
+}
+function camelToSpinal(clsName: string) {
+  let spinal = clsName.replace(/[A-Z](?![A-Z])/g, (s) => {
+    return '-' + s
+  }).replace(/^-/, '').toLowerCase()
+  // a custom element must have hyphen in it
+  return spinal
 }
