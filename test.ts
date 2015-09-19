@@ -89,7 +89,7 @@ function view(n: NameCard) {
   // method as event listener, computed property for data passing and dom manipulation
   return div(
     {[p`style`]: style, click() {enlarge()}},
-    div('name'), // plain text
+    div['btn']('name'), // plain text
     div(n.fullName) // observable can also be used
   )
 }

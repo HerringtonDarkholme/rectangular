@@ -15,8 +15,37 @@ interface TagMaker<T, C, E extends HTMLElement> {
   (...children: C[]): Tag<E>
 }
 
+declare var Proxy: any
+
+var handler = {
+  get(target, key) {
+    if (key in target) return target[key]
+    var cls = {class: key.split(' ')}
+    return function(props: any, ...children: any[]) {
+      if (!isPlainObject(props)){
+        return target(cls, ...[props].concat(children))
+      } else {
+        cls = Object['assign'](cls, props)
+        return target(cls, ...children)
+      }
+    }
+  }
+}
+interface ClassString<T> {
+  [k: string]: T
+}
+
+function makeClassProxy<T extends Function>(fn: T): T & ClassString<T> {
+  if ('Proxy' in window) {
+    var proxy = new Proxy(fn, handler)
+    return proxy
+  } else {
+    return fn as any
+  }
+}
+
 function t<E extends HTMLElement>(name: string) {
-  return function(props: any, ...children: any[]) {
+  return makeClassProxy(function(props: any, ...children: any[]) {
     if (arguments.length === 0) {
       return new Tag<E>(name, {}, [])
     } else if (!isPlainObject(props)){
@@ -24,7 +53,7 @@ function t<E extends HTMLElement>(name: string) {
     } else {
       return new Tag<E>(name, props, children)
     }
-  } as TagMaker<{}, ChildTag, E>
+  } as TagMaker<{}, ChildTag, E>)
 }
 
 var v: <E extends HTMLElement>(n: string) => (p?: PROPERTY) => Tag<E> = t
