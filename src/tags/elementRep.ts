@@ -55,6 +55,9 @@ export class Tag<T extends HTMLElement> extends NodeRep<T> {
       value.bind(this)
       return
     }
+    if (key === 'checked') {
+      elem[key] = value
+    }
 
     if (typeof value === 'string') {
       elem.setAttribute(key, value)

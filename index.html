@@ -22,9 +22,18 @@
     .warn {
       color: red;
     }
+    .done {
+      text-decoration: line-through;
+      color: grey;
+    }
   </style>
 </head>
 <body>
-  <script src="dist/bundle.js" type="text/javascript" charset="utf-8"></script>
+  <script src="jspm_packages/system.src.js" type="text/javascript" charset="utf-8"></script>
+  <script src="config.js" type="text/javascript" charset="utf-8"></script>
 </body>
+  <script type="text/javascript" charset="utf-8">
+    console.log(123)
+    System.import('src/test')
+  </script>
 </html>

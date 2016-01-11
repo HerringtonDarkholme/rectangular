@@ -1,15 +1,22 @@
-import {Component, p, Tag, For, If} from './src/api'
-import {div, input, label} from './src/tags/index'
-import {Obs, Var, Rx} from './src/overkill/index'
-import {KVData} from './src/api'
-import {Template} from './src/api'
+import {Component, p, Tag, For, If} from './api'
+import {div, input, label} from './tags/index'
+import {Obs, Var, Rx} from './overkill/index'
+import {KVData} from './api'
+import {Template} from './api'
 
-import {ul, li, dl, dd, dt} from './src/tags/index'
+import {ul, li, dl, dd, dt} from './tags/index'
+
+interface Todo {
+  text: string
+  done: boolean
+}
 
 function render({newTodo, todos, length}: MyComponent) {
   var inp = input({class: 'heheh', [p`value`]: newTodo, keydown(e) {e.which === 13 && submit()}})
   var submit = function() {
-      Var.mutate(todos, t => t.push(newTodo()))
+      Var.mutate(todos, t => t.push(
+        {text: newTodo(), done: false}
+      ))
       newTodo('')
   }
 
@@ -26,13 +33,14 @@ function render({newTodo, todos, length}: MyComponent) {
       ).Else(() => div('just fine')),
 
       For(todos, (t, i) => {
-      var click = () => Var.mutate(todos, (e) => {
-        e.splice(i, 1)
-        return false
-      })
-      return label(
-        input({type: 'checkbox', click}),
-        t)
+        var click = () => Var.mutate(todos, (e) => {
+          e[i].done = !e[i].done
+          return false
+        })
+        return label({class: t.done ? 'done' : ''},
+          input({type: 'checkbox', click, checked: t.done}),
+          t.text
+        )
       })
     )
   )
@@ -41,7 +49,11 @@ function render({newTodo, todos, length}: MyComponent) {
 @Template(render)
 class MyComponent extends Component {
   newTodo = Var('123')
-  todos = Var(['make', 'install', 'exe'])
+  todos = Var([
+    {text: 'make', done: false},
+    {text: 'install', done: false},
+    {text: 'exe', done: false},
+  ])
   length = Rx(_ => this.todos().length)
 }
 
@@ -89,13 +101,14 @@ function view(n: NameCard) {
   // method as event listener, computed property for data passing and dom manipulation
   return div(
     {[p`style`]: style, click() {enlarge()}},
-    div['btn']('name'), // plain text
+    div('name'), // plain text
     div(n.fullName) // observable can also be used
   )
 }
 
 var a = new NameCard()
 mount(a)
+console.log(456)
 
 setTimeout(_ => {
   a.firstName('Smith')
