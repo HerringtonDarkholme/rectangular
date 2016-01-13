@@ -4,5 +4,6 @@
     "module": "commonjs",
     "experimentalDecorators": true,
     "outDir": "dist"
-  }
+  },
+  "files": []
 }
