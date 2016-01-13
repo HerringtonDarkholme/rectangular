@@ -1,6 +1,6 @@
 import {Component, p, Tag, For, If} from './api'
-import {div, input, label} from './tags'
-import {Obs, Var, Rx} from './overkill'
+import {div, input, label} from './tags/index'
+import {Obs, Var, Rx} from './overkill/index'
 import {KVData} from './api'
 import {Template} from './api'
 
