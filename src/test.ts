@@ -57,11 +57,11 @@ class MyComponent extends Component {
   length = Rx(_ => this.todos().length)
 }
 
-function mount(elem) {
+function mount(elem: Tag<HTMLElement>) {
   document.body.appendChild(elem._render())
 }
 
-var btnText
+var btnText: any
 let btnStyle: KVData = {
   color: 'red'
 }
@@ -110,7 +110,7 @@ var a = new NameCard()
 mount(a)
 console.log(456)
 
-setTimeout(_ => {
+setTimeout(() => {
   a.firstName('Smith')
   a.lastName('John')
 }, 2000)

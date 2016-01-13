@@ -4,8 +4,5 @@
     "module": "commonjs",
     "experimentalDecorators": true,
     "outDir": "dist"
-  },
-  "files": [
-    "src/overkill/ok", "src/diff/array"
-  ]
+  }
 }

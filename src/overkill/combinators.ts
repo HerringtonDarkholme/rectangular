@@ -1,4 +1,4 @@
-import {Rx, Var, getSinal} from './index'
+import {Rx, Var, getSignal} from './index'
 import {peek as _peek} from './ok'
 
 type _ = {}
@@ -14,6 +14,6 @@ function filter<U>(v: Var<U>, fn: (t: U) => boolean): Rx<U, _> {
 }
 
 function peek<U>(o: Var<U>): U {
-  let sig: any = getSinal(o)
+  let sig: any = getSignal(o)
   return <any>_peek(sig)
 }
