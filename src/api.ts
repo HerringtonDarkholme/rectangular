@@ -1,16 +1,17 @@
 import {Tag} from './tags/elementRep'
 import {TextRep} from './tags/nodeRep'
 import {Prop, Class, Value, Style} from './directives/index'
-import {Var} from './overkill/index'
+
+import * as tags from './tags/index'
+import * as ok from './overkill/index'
+export const HTML = tags
+export const OK = ok
 
 export {Component} from './tags/component'
-export * from './tags/index'
 export {Tag} from './tags/elementRep'
 export * from './tags/for'
 export * from './tags/if'
 export * from './decorator'
-
-
 
 const directiveMapping = {
   value: Value,

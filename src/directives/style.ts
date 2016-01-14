@@ -3,7 +3,7 @@ import Directive from './directive'
 import {Tag} from '../tags/elementRep'
 import {write} from '../render'
 import {Obs} from '../overkill/index'
-import {prefix} from 'prefix-lite'
+import prefix from 'prefix-lite'
 
 function convertObjectToStyle(style: CSSStyleDeclaration): string {
   style = prefix(style)

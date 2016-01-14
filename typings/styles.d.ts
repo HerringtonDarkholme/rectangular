@@ -5,5 +5,5 @@ declare module "easy-style" {
 }
 
 declare module "prefix-lite" {
-	function prefix(a: any): CSSStyleDeclaration
+	export default function prefix(a: any): CSSStyleDeclaration
 }

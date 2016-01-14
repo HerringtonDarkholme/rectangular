@@ -1,7 +1,9 @@
 import {Component, p, Tag, For, If, KVData, Template} from '../src/api'
-import {div, input, label} from '../src/tags/index'
-import {Obs, Var, Rx} from '../src/overkill/index'
-import {ul, li, dl, dd, dt} from '../src/tags/index'
+import {OK, HTML} from '../src/api'
+
+let {div, input, label} = HTML
+let {ul, li, dl, dd, dt} = HTML
+let {Obs, Var, Rx} = OK
 
 interface Todo {
   text: string
