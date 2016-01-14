@@ -44,7 +44,7 @@ export const CSS = {
   keyframe(query: string, obj: {[step: string]: CSSStyleDeclaration}) {
     for (let k of Object.keys(obj)) {
       obj[k] = prefix(obj[k])
-	}
-    return keyframe(obj)
+}
+    return keyframe(obj))
   },
 }
