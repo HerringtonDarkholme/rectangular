@@ -1,0 +1,9 @@
+declare module "easy-style" {
+	function style(obj: CSSStyleDeclaration): string
+	function rule(query: string, obj: CSSStyleDeclaration): string
+	function keyframe(obj: CSSStyleDeclaration): string
+}
+
+declare module "prefix-lite" {
+	function prefix(a: any): CSSStyleDeclaration
+}

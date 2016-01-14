@@ -2,3 +2,5 @@ node_modules/
 jspm_packages/
 dist/
 test/*.js
+src/tsconfig.json
+sample/tsconfig.json

@@ -5,5 +5,5 @@
     "experimentalDecorators": true,
     "outDir": "dist"
   },
-  "files": []
+  "files": ["src/api", "sample/test"]
 }

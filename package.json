@@ -7,7 +7,8 @@
   "jspm": {
     "dependencies": {
       "easy-style": "npm:easy-style@^1.0.0",
-      "es6-collections": "npm:es6-collections@^0.5.5"
+      "es6-collections": "npm:es6-collections@^0.5.5",
+      "prefix-lite": "npm:prefix-lite@^0.0.1"
     },
     "devDependencies": {
       "typescript": "npm:typescript@1.8.0-dev.20160108"

@@ -1,17 +1,16 @@
+/// <reference path='../../typings/styles.d.ts' />
 import Directive from './directive'
 import {Tag} from '../tags/elementRep'
 import {write} from '../render'
 import {Obs} from '../overkill/index'
+import {prefix} from 'prefix-lite'
 
-interface StyleDef {
-  [prop: string]: string
-}
-
-function convertObjectToStyle(style: StyleDef): string {
+function convertObjectToStyle(style: CSSStyleDeclaration): string {
+  style = prefix(style)
   return Object.keys(style).map(k => `${camelToSpinal(k)}: ${style[k]}`).join(';')
 }
 
-export class Style extends Directive<StyleDef> {
+export class Style extends Directive<CSSStyleDeclaration> {
   bind<E extends Tag<HTMLElement>>(ele: E) {
     let element = ele.element
     let value = this.v()

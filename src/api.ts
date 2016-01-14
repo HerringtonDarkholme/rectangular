@@ -11,6 +11,7 @@ export * from './tags/if'
 export * from './decorator'
 
 
+
 const directiveMapping = {
   value: Value,
   class: Class,
