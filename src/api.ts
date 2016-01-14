@@ -2,6 +2,9 @@ import {Tag} from './tags/elementRep'
 import {TextRep} from './tags/nodeRep'
 import {Prop, Class, Value, Style} from './directives/index'
 
+import prefix from 'prefix-lite'
+import {style, rule, keyframe} from 'easy-style'
+
 import * as tags from './tags/index'
 import * as ok from './overkill/index'
 export const HTML = tags
@@ -30,3 +33,18 @@ export function p(name: string[]) {
 }
 
 export type KVData = {[k:string]: string}
+
+export const CSS = {
+  style(obj: CSSStyleDeclaration) {
+    return style(prefix(obj))
+  },
+  rule(query: string, obj: CSSStyleDeclaration) {
+    return rule(query, prefix(obj))
+  },
+  keyframe(query: string, obj: {[step: string]: CSSStyleDeclaration}) {
+    for (let k of Object.keys(obj)) {
+      obj[k] = prefix(obj[k])
+	}
+    return keyframe(obj)
+  },
+}
