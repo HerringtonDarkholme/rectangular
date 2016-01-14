@@ -1,16 +1,16 @@
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
-var GLOBAL_ATTRIBUTES = {
+var GLOBAL_ATTRIBUTES: GlobalAttributes = {
   'accesskey': '',
-  'contenteditable': '',
+  'contenteditable': false,
   'contextmenu': '',
   'dir': '',
-  'draggable': '',
+  'draggable': false,
   'dropzone': '',
-  'hidden': '',
+  'hidden': false,
   'id': '',
-  'spellcheck': '',
+  'spellcheck': false,
   'style': '',
-  'tabindex': '',
+  'tabindex': 0,
   'title': '',
   'translate': '',
   'class': <string[]>[],
