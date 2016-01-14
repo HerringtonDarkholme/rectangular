@@ -109,14 +109,23 @@ Rx.byDiff = (diff: DiffStrategy) => {
   }
 }
 
-interface ObsAPI {
+interface _ObsAPI {
   <V, C>(fn: Var<V>, sub?: Sub<V>): ObsImp<V, C>
   <V, C>(fn: Rx<V, C>, sub?: Sub<V>): ObsImp<V, C>
   <V, C>(fn: (c: C) => V, sub?: Sub<V>): ObsImp<V, C>
 }
+interface ObsAPI extends _ObsAPI {
+  byDiff(diff: DiffStrategy): _ObsAPI
+}
 
 export var Obs: ObsAPI = function Obs<V, C>(fn: (c: C) => V, sub?: Sub<V>): ObsImp<V, C> {
   return new ObsImp(fn, sub)
+} as any
+
+Obs.byDiff = (diff: DiffStrategy) => {
+  return function Obs<V, C>(fn: (c: C) => V, sub?: Sub<V>): ObsImp<V, C> {
+    return new ObsImp(fn, sub, diff)
+  }
 }
 
 export function getSignal(f: Var<_> | Rx<_, _>): Signal<_, _> {

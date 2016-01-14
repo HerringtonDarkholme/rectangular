@@ -1,4 +1,5 @@
 import {Var, Sig, Obs, isSignal, ObsImp} from '../overkill/index'
+import {ArrayDiffChecker} from '../diff/index'
 import NodeRep, {ChildTag} from './nodeRep'
 import {append, createAnchor, getParamNames} from './util'
 
@@ -37,7 +38,7 @@ export class ForImpl<T, E extends ChildTag> extends NodeRep<DocumentFragment> {
       append(fragment, childTag)
     }
     fragment.appendChild(anchorEnd)
-    this.obs = this.obs || Obs(observable, (newVal: T[]) => {
+    this.obs = this.obs || Obs.byDiff(ArrayDiffChecker)(observable, (newVal: T[], k) => {
       this.removeChildren()
       let func = this.func
       let fragment = document.createDocumentFragment()
