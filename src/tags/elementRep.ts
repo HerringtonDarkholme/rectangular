@@ -44,7 +44,7 @@ export class Tag<T extends HTMLElement> extends NodeRep<T> {
   private polymorphicBind(elem: T, key: string, value: string|Function|Directive<{}>|Sig<{}>) {
     if (key in this._linkedDirectives) {
       let directive = this._linkedDirectives[key]
-      directive.v = value
+      directive.v = value as any
       this.$directives.push(directive)
       directive.bind(this)
       return

@@ -1,22 +1,22 @@
 import {Prop} from '../directives/prop'
 import {write} from '../render'
 import NodeRep, {ChildTag, TextRep} from './nodeRep'
-import {isSignal, Obs} from '../overkill/index'
+import {isSignal, Obs, Var} from '../overkill/index'
 
-export function append(elem, child: ChildTag) {
-  if (typeof child === 'string') {
-    elem.appendChild(document.createTextNode(child))
-    return
-  }
+export function normalizeChildTag(child: ChildTag): NodeRep<Node> {
   if (child instanceof NodeRep) {
-    elem.appendChild(child._render())
-    return
+    return child
+  }
+  if (typeof child === 'string') {
+    return new TextRep(Var(child))
   }
   if (isSignal(child)) {
-    let text = new TextRep(child)
-    elem.appendChild(text._render())
-    return
+    return new TextRep(child)
   }
+}
+
+export function append(elem: Node, child: ChildTag) {
+  elem.appendChild(normalizeChildTag(child)._render())
 }
 
 export function createAnchor(text: string, debug?: boolean, persist?: boolean): Node {

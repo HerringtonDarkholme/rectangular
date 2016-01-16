@@ -1,7 +1,7 @@
 import {Var, Sig, Obs, isSignal, ObsImp} from '../overkill/index'
-import {ArrayDiffChecker} from '../diff/index'
+import {ArrayDiffChecker, Diff} from '../diff/index'
 import NodeRep, {ChildTag} from './nodeRep'
-import {append, createAnchor, getParamNames} from './util'
+import {append, createAnchor, getParamNames, normalizeChildTag} from './util'
 
 export class ForImpl<T, E extends ChildTag> extends NodeRep<DocumentFragment> {
   private children: NodeRep<Node>[] = []
@@ -38,23 +38,55 @@ export class ForImpl<T, E extends ChildTag> extends NodeRep<DocumentFragment> {
       append(fragment, childTag)
     }
     fragment.appendChild(anchorEnd)
-    this.obs = this.obs || Obs.byDiff(ArrayDiffChecker)(observable, (newVal: T[], k) => {
-      this.removeChildren()
-      let func = this.func
-      let fragment = document.createDocumentFragment()
-      var childNode = anchorBegin.nextSibling
-      let parentNode = anchorBegin.parentNode
-      for (let i = 0, l = newVal.length; i < l; i++) {
-        let child = newVal[i]
-        let childTag = func(child, i)
-        append(fragment, childTag)
-        if (childTag instanceof NodeRep) {
-          this.children.push(<any>childTag)
-        }
-      }
-      parentNode.insertBefore(fragment, anchorEnd)
+    this.obs = this.obs || Obs.byDiff(ArrayDiffChecker)(observable, (newVal: T[], diff) => {
+      console.log(diff)
+      this.update(diff)
+      // this.removeChildren()
+      // let func = this.func
+      // let fragment = document.createDocumentFragment()
+      // var childNode = anchorBegin.nextSibling
+      // let parentNode = anchorBegin.parentNode
+      // for (let i = 0, l = newVal.length; i < l; i++) {
+      //   let child = newVal[i]
+      //   let childTag = normalizeChildTag(func(child, i))
+      //   fragment.appendChild(childTag._render())
+      //   this.children.push(childTag)
+      // }
+      // parentNode.insertBefore(fragment, anchorEnd)
     })
     return fragment
+  }
+
+  private update(diff: Diff<T>) {
+    let count = 0
+    let anchorEnd = this._anchorEnd
+    let parentNode = anchorEnd.parentElement
+    let children = this.children
+    for (let change of diff.changes) {
+      while (count < +change.name) {
+        count++
+      }
+      let child = children[count]
+      if (!child) {
+        if (change.type !== 'add') throw new Error('wrong diff in For tag')
+        let newNodeRep = normalizeChildTag(this.func(change.value, count))
+        children.push(newNodeRep)
+        parentNode.insertBefore(newNodeRep._render(), anchorEnd)
+        continue
+      }
+      if (change.type === 'update') {
+        let newNodeRep = normalizeChildTag(this.func(change.value, count))
+        let oldNodeRep = children.splice(count, 1, newNodeRep)[0]
+        oldNodeRep.addRefBefore(newNodeRep)
+        oldNodeRep._remove()
+        continue
+      }
+      if (change.type === 'delete') {
+        let oldNodeRep = children.splice(count, 1)[0]
+        oldNodeRep._remove()
+        continue
+      }
+    }
   }
 
   private removeChildren() {
@@ -74,6 +106,12 @@ export class ForImpl<T, E extends ChildTag> extends NodeRep<DocumentFragment> {
     this.obs.dispose()
     this._anchorBegin = null
     this._anchorEnd = null
+  }
+
+  addRefBefore(t: ChildTag) {
+    let childNode = normalizeChildTag(t)._render()
+    let parentNode = this._anchorBegin.parentNode
+    parentNode.insertBefore(childNode, this._anchorBegin)
   }
 }
 

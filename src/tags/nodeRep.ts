@@ -2,6 +2,7 @@ import {Var, Obs} from '../overkill/index'
 import verifier from '../directives/verifier'
 import Directive from '../directives/directive'
 import EventEmitter from '../eventEmitter'
+import {normalizeChildTag} from './util'
 
 export type ChildTag = string | Var<string> | NodeRep<Node>
 export type Child<T> = string | Var<string> | T
@@ -34,6 +35,11 @@ abstract class NodeRep<T extends Node> extends EventEmitter {
       dir.unbind(this)
     }
   }
+
+  addRefBefore(t: ChildTag) {
+    let childNode = normalizeChildTag(t)._render()
+    this.element.parentElement.insertBefore(childNode, this.element)
+  }
 }
 
 export default NodeRep
@@ -51,4 +57,3 @@ export class TextRep extends NodeRep<Text> {
     return this.element = node
   }
 }
-

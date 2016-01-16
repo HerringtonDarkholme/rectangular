@@ -14,6 +14,7 @@ function render({newTodo, todos, length}: MyComponent) {
   var inp = input({class: 'heheh', [p`value`]: newTodo, keydown(e) {e.which === 13 && submit()}})
   var submit = function() {
       Var.mutate(todos, t => t.push(
+        {text: newTodo(), done: false},
         {text: newTodo(), done: false}
       ))
       newTodo('')

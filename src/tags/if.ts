@@ -1,6 +1,6 @@
 import {Sig, Var, Obs, isSignal, dispose, ObsImp} from '../overkill/index'
 import NodeRep, {ChildTag} from './nodeRep'
-import {append, createAnchor, getParamNames} from './util'
+import {append, createAnchor, getParamNames, normalizeChildTag} from './util'
 
 const EMPTY_NODE_SINGLETON: any = {
   _render() {
@@ -64,6 +64,12 @@ export class IfImpl<E extends NodeRep<Node>> extends NodeRep<DocumentFragment> {
     this.watcher.dispose()
     this._anchorBegin = null
     this._anchorEnd = null
+  }
+
+  addRefBefore(t: ChildTag) {
+    let childNode = normalizeChildTag(t)._render()
+    let parentNode = this._anchorBegin.parentNode
+    parentNode.insertBefore(childNode, this._anchorBegin)
   }
 }
 
