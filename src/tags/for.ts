@@ -40,7 +40,7 @@ export class ForImpl<T, E extends ChildTag> extends NodeRep<DocumentFragment> {
     fragment.appendChild(anchorEnd)
     this.obs = this.obs || Obs.byDiff(ArrayDiffChecker)(observable, (newVal: T[], diff) => {
       console.log(diff)
-      this.update(diff)
+      this.update(newVal, diff)
       // this.removeChildren()
       // let func = this.func
       // let fragment = document.createDocumentFragment()
@@ -57,7 +57,7 @@ export class ForImpl<T, E extends ChildTag> extends NodeRep<DocumentFragment> {
     return fragment
   }
 
-  private update(diff: Diff<T>) {
+  private update(newVal: T[], diff: Diff<T>) {
     let count = 0
     let anchorEnd = this._anchorEnd
     let parentNode = anchorEnd.parentElement
@@ -75,7 +75,7 @@ export class ForImpl<T, E extends ChildTag> extends NodeRep<DocumentFragment> {
         continue
       }
       if (change.type === 'update') {
-        let newNodeRep = normalizeChildTag(this.func(change.value, count))
+        let newNodeRep = normalizeChildTag(this.func(newVal[count], count))
         let oldNodeRep = children.splice(count, 1, newNodeRep)[0]
         oldNodeRep.addRefBefore(newNodeRep)
         oldNodeRep._remove()

@@ -36,8 +36,8 @@ abstract class NodeRep<T extends Node> extends EventEmitter {
     }
   }
 
-  addRefBefore(t: ChildTag) {
-    let childNode = normalizeChildTag(t)._render()
+  addRefBefore(t: NodeRep<Node>) {
+    let childNode = t._render()
     this.element.parentElement.insertBefore(childNode, this.element)
   }
 }
@@ -45,15 +45,20 @@ abstract class NodeRep<T extends Node> extends EventEmitter {
 export default NodeRep
 
 export class TextRep extends NodeRep<Text> {
-  constructor(public props: Var<string>) {
+  constructor(public props: Var<string> | string) {
     super(props)
   }
   _render(): Text {
     let obs = this.props
-    var node = document.createTextNode(obs())
-    Obs<string, {}>(obs, (n) => {
-      node.textContent =  n
-    })
+    var node: Text
+    if (typeof obs === 'string') {
+      node = document.createTextNode(obs)
+    } else {
+      node = document.createTextNode(obs())
+      Obs<string, {}>(obs, (n) => {
+        node.textContent =  n
+      })
+    }
     return this.element = node
   }
 }

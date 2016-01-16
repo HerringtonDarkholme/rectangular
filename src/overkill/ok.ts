@@ -8,7 +8,10 @@ export class Caller<T> {
     if (init !== undefined) this.callers.push(init)
   }
   withValue(t: T): Function {
-    if (this.callers.indexOf(t) >= 0) throw new Error('cyclic')
+    if (this.callers.indexOf(t) >= 0) {
+      console.error(this.callers)
+      throw new Error('cyclic detected!')
+    }
     return (fn: Function) => {
       this.callers.push(t)
       try {

@@ -8,7 +8,7 @@ export function normalizeChildTag(child: ChildTag): NodeRep<Node> {
     return child
   }
   if (typeof child === 'string') {
-    return new TextRep(Var(child))
+    return new TextRep(child)
   }
   if (isSignal(child)) {
     return new TextRep(child)
